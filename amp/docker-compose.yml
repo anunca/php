@@ -1,0 +1,7 @@
+services:
+  app:
+    build:
+      target: dev
+    image: registry.$DOMAIN_NAME/php-amp
+    volumes:
+      - ./src:/var/www/html

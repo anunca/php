@@ -1,0 +1,12 @@
+services:
+  redis:
+    image: $REDIS_STACK_VERSION
+    ports:
+      - 6379
+      - 8001:8001
+    volumes:
+      - redis-dev:/data
+    environment:
+      REDIS_ARGS: "--save 60 1000 --appendonly yes"
+volumes:
+  redis-dev:

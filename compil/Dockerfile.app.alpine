@@ -1,0 +1,42 @@
+ARG OS_VERSION
+
+FROM $OS_VERSION AS base
+
+RUN apk add --no-cache libxml2-dev sqlite-dev libzip-dev
+
+FROM base AS build
+
+ARG PHP_VERSION_NUMBER
+ARG PHP_DIRECTORY
+ARG APP_ENV
+
+RUN apk update -q\
+  && apk add\
+    autoconf build-base bison re2c\
+    apk add git\
+  && rm -rf /var/cache/apk/*
+
+WORKDIR /usr/local/src/php
+
+COPY sh/php_install.sh ..
+RUN sh ../php_install.sh
+
+COPY ./etc/php-fpm.conf /usr/local/php/etc/php-fpm.d/www.conf
+
+FROM base AS dev
+
+ARG PHP_DIRECTORY
+
+COPY --from=build ${PHP_DIRECTORY} ${PHP_DIRECTORY}
+
+RUN ln -s ${PHP_DIRECTORY}/bin/php /usr/local/bin\
+  && ln -s ${PHP_DIRECTORY}/sbin/php-fpm /usr/local/bin
+
+COPY sh/wrapper_script.sh /usr/local/bin/wrapper_script.sh
+RUN chmod +x /usr/local/bin/wrapper_script.sh
+
+CMD sh /usr/local/bin/wrapper_script.sh
+
+FROM dev AS prod
+
+COPY ./src /var/www/html

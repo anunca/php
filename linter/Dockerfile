@@ -1,0 +1,9 @@
+ARG PHP_IMAGE
+
+FROM $PHP_IMAGE
+
+WORKDIR /app
+
+ENTRYPOINT [ "php" ]
+
+CMD [ "-l" ]

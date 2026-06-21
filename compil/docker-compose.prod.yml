@@ -1,0 +1,7 @@
+services:
+  app:
+    image: anunca/php-compil:app-prod
+    build:
+      target: prod
+      args:
+        APP_ENV: prod

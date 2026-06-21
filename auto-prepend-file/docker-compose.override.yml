@@ -1,0 +1,22 @@
+services:
+  web:
+    depends_on:
+      - app
+    image: $NGINX_VERSION
+    volumes:
+      - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
+      - var_run:/var/run
+    ports:
+      - 80:80
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_IMAGE:
+    volumes:
+      - ./etc/php-fpm.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
+      - ./etc/auto_prepend_file.php:/usr/local/etc/php/auto_prepend_file.php
+      - var_run:/var/run
+volumes:
+  var_run:

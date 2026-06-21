@@ -1,0 +1,9 @@
+services:
+  app:
+    image: anunca/php-compil:app
+    build:
+      target: dev
+      args:
+        APP_ENV: dev
+    volumes:
+      - ./src:/var/www/html

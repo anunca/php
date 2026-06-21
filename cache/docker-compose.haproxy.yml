@@ -1,0 +1,34 @@
+services:
+  app1:
+    build:
+      target: dev
+    image: registry.$DOMAIN_NAME/php-cache
+    volumes:
+      - ./src:/var/www/html
+      - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
+      - ./etc/php/xdebug/xdebuginfo.php:/var/www/html/public/xdebuginfo.php
+      - ./etc/php/opcache.php:/var/www/html/public/opcache.php
+    environment:
+      - XDEBUG_MODE
+  app2:
+    build:
+      target: dev
+    image: registry.$DOMAIN_NAME/php-cache
+    volumes:
+      - ./src:/var/www/html
+      - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
+      - ./etc/php/xdebug/xdebuginfo.php:/var/www/html/public/xdebuginfo.php
+      - ./etc/php/opcache.php:/var/www/html/public/opcache.php
+    environment:
+      - XDEBUG_MODE
+  app3:
+    build:
+      target: dev
+    image: registry.$DOMAIN_NAME/php-cache
+    volumes:
+      - ./src:/var/www/html
+      - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
+      - ./etc/php/xdebug/xdebuginfo.php:/var/www/html/public/xdebuginfo.php
+      - ./etc/php/opcache.php:/var/www/html/public/opcache.php
+    environment:
+      - XDEBUG_MODE

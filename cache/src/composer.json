@@ -1,0 +1,16 @@
+{
+    "name": "demo/cache",
+    "type": "project",
+    "require": {
+        "symfony/cache": "^7.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^7.0",
+        "rlerdorf/opcache-status": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Demo\\Cache\\": "./src"
+        }
+    }
+}

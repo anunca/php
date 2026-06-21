@@ -1,0 +1,18 @@
+services:
+  web:
+    volumes:
+      - var_www:/var/www/html/public
+  app:
+    build:
+      target: prod
+      args:
+        APP_ENV: prod
+        APP_DEBUG: 0
+    image: registry.$DOMAIN_NAME/php-auto-prepend-file-prod
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0
+    volumes:
+      - var_www:/var/www/html/public
+volumes:
+  var_www:

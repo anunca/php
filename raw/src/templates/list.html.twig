@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>Todo list ({{ count }})</h1>
+  </header>
+
+  <div class="container">
+    <h2>List</h2>
+    <table>
+      <ul>
+        {% for todo in todos %}
+        <li>Id: {{ todo.id }}, Name: {{ todo.name }}</li>
+        {% endfor %}
+      </ul>
+    </table>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Todo. All rights reserved.</p>
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+{# comment #}
+
+{% for i in 1..12 %}
+  {{ i }}
+{% endfor %}
+
+<hr>
+{{ foo|default('bar') }}
+<hr>
+
+<pre>
+  {{ dump(templates) }}
+</pre>
+
+{% block body %}body{% endblock %}

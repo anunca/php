@@ -1,0 +1,9 @@
+services:
+  web:
+    image: anunca/php-beta:web-prod
+  app:
+    image: anunca/php-beta:app-prod
+    build:
+      target: prod
+    environment:
+      APP_ENV: prod

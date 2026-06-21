@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_IMAGE:
+    volumes:
+      - ./etc/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+    ports:
+      - 80:80
+  redis:
+    image: $REDIS_VERSION
+    ports:
+      - 6379
+    volumes:
+      - redis:/data
+    command: redis-server --appendonly yes
+volumes:
+  redis:

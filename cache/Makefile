@@ -1,0 +1,93 @@
+.PHONY: help
+.DEFAULT_GOAL := help
+
+include .env
+-include .env.local
+
+ENV ?= dev
+TAG ?= ${ENV}
+DOCKER_SHELL ?= sh
+
+dc_files = docker-compose.override.yml
+
+ifeq ($(ENV),prod)
+	dc_files += docker-compose.prod.yml
+else
+	dc_files += docker-compose.yml
+endif
+
+# Cache adapter
+ifeq ($(CACHE_ADAPTER),redis)
+	ifeq ($(ENV),prod)
+		dc_files += docker-compose.redis.prod.yml
+	else
+		dc_files += docker-compose.redis.yml
+	endif
+else ifeq ($(CACHE_ADAPTER),memcached)
+	dc_files += docker-compose.memcached.yml
+endif
+
+# HAProxy (always added when cache adapter is used)
+ifneq ($(CACHE_ADAPTER),)
+	ifeq ($(ENV),prod)
+		dc_files += docker-compose.override.haproxy.yml docker-compose.haproxy.prod.yml
+	else
+		dc_files += docker-compose.override.haproxy.yml docker-compose.haproxy.yml
+	endif
+endif
+
+dc = docker compose $(foreach f,$(dc_files),-f $(f))
+
+export ENV
+export TAG
+
+help h: ## Show help
+	@awk 'BEGIN {FS = ":.*##"} \
+	/^[a-zA-Z0-9_. -]+:.*##/ { \
+		split($$1,a," "); \
+		printf "%-20s %s\n", a[1], $$2 \
+	} \
+	/^##@/ {printf "\n%s\n", substr($$0,5)}' $(MAKEFILE_LIST)
+
+##@ Docker
+config c: ## Show config
+	$(dc) config
+
+build b: ## Build images
+	$(dc) build
+
+start s: ## Start containers
+	$(dc) up -d
+
+stop st: ## Stop containers
+	$(dc) down -t0
+
+restart r: stop start ## Restart
+
+run: ## Run shell
+	$(dc) run --rm --entrypoint $(DOCKER_SHELL) app1
+
+shell sh: ## Exec shell
+	$(dc) exec app1 $(DOCKER_SHELL)
+
+logs l: ## Follow logs
+	$(dc) logs -f
+
+ps: ## List containers
+	$(dc) ps -a
+
+clean cl: stop ## Cleanup docker
+	docker system prune -fa && docker volume prune -fa
+
+sh.app2: ## Exec shell
+	$(dc) exec app2 $(DOCKER_SHELL)
+
+sh.app3: ## Exec shell
+	$(dc) exec app3 $(DOCKER_SHELL)
+
+##@ Redis
+redis.sh: ## Shell
+	$(dc) exec redis redis-cli
+
+redis.flushall: ## Flushall
+	$(dc) exec redis redis-cli FLUSHALL

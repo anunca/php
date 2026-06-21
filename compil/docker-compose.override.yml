@@ -1,0 +1,38 @@
+services:
+  web:
+    depends_on:
+      - app
+    image: anunca/php-compil:web
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args:
+        NGINX_VERSION:
+    ports:
+      - 80:80
+    volumes:
+      - php_run:/var/run/php
+    healthcheck:
+      test: [ 'CMD', 'curl', '--fail', 'http://localhost' ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+  app:
+    build:
+      context: .
+      dockerfile: $DOCKERFILE
+      args:
+        OS_VERSION:
+        PHP_VERSION_NUMBER:
+        PHP_DIRECTORY:
+    volumes:
+      - php_run:/var/run/php
+    healthcheck:
+      test: [ 'CMD', 'pidof', 'php-fpm' ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+volumes:
+  php_run:

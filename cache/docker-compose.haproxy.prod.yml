@@ -1,0 +1,13 @@
+services:
+  app1:
+    build:
+      target: prod
+    image: registry.$DOMAIN_NAME/php-cache-prod
+  app2:
+    build:
+      target: prod
+    image: registry.$DOMAIN_NAME/php-cache-prod
+  app3:
+    build:
+      target: prod
+    image: registry.$DOMAIN_NAME/php-cache-prod

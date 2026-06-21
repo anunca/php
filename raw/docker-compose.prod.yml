@@ -1,0 +1,13 @@
+services:
+  web:
+    volumes:
+      - ./etc/nginx/nginx-prod.conf:/etc/nginx/conf.d/default.conf
+      - src:/var/www/html
+  app:
+    build:
+      target: prod
+    image: registry.$DOMAIN_NAME/todo-prod
+    volumes:
+      - src:/var/www/html
+volumes:
+  src:

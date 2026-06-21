@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      target: prod
+      args:
+        APP_ENV: prod
+        APP_DEBUG: 0
+    image: registry.$DOMAIN_NAME/php-twig-prod
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0

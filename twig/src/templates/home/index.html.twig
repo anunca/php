@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  {{ parent()|upper }}<br>
+  {{ parent()|lower }}<br>
+  {{ template }}
+  <hr>
+  {% for template in templates %}
+  {{ template }}<br>
+  {% endfor %}
+{% endblock %}

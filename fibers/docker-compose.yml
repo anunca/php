@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      target: dev
+    image: registry.$DOMAIN_NAME/php-fiber
+    volumes:
+      - ./src:/var/www/html
+      - ./xdebug:/tmp/xdebug

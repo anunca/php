@@ -1,0 +1,12 @@
+services:
+  web:
+    volumes:
+      - php_src:/var/www/html
+  app:
+    build:
+      target: prod
+    image: registry.$DOMAIN_NAME/php-xdebug-prod
+    volumes:
+      - php_src:/var/www/html
+volumes:
+  php_src:

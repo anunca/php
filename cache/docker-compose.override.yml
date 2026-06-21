@@ -1,0 +1,13 @@
+services:
+  app1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_IMAGE:
+    volumes:
+      - ./etc/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+    ports:
+      - 80:80
+    env_file:
+      - .env
