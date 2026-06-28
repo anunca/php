@@ -47,7 +47,11 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 FROM base-builder AS dev
 
 #php ini
-RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
+RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
+&& sed -i '\
+s|;date.timezone =.*|date.timezone = Europe/Paris|;\
+s/memory_limit =.*/memory_limit = 128M/;\
+' $PHP_INI_DIR/php.ini
 
 #xdebug
 RUN pecl install xdebug\
