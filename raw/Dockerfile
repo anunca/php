@@ -16,7 +16,7 @@ WORKDIR /var/www/html
 
 FROM base AS base-builder
 
-#dev dependencies
+#Composer dependencies
 RUN apk add unzip git\
   && rm -rf /var/cache/apk/
 

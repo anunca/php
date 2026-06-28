@@ -23,7 +23,7 @@ WORKDIR /var/www/html
 
 FROM base AS base-builder
 
-#dev dependencies
+#Composer dependencies
 RUN apt update -qq\
   && apt install -y git unzip\
   && rm -rf /var/lib/apt/lists/*

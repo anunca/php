@@ -18,7 +18,7 @@ WORKDIR /app
 
 FROM base AS dev
 
-#dev dependencies
+#Composer dependencies
 RUN apt update -qq\
   && apt install -y git unzip\
   && rm -rf /var/lib/apt/lists/*
