@@ -13,7 +13,8 @@ function build {
 
 function conf {
   test ${APP_ENV} = 'dev' && cp php.ini-development ${PHP_DIRECTORY}/lib/php.ini || cp php.ini-production ${PHP_DIRECTORY}/lib/php.ini \
-  && sed -i 's/\[opcache\]/[opcache]\nzend_extension=opcache.so/;\
+  && sed -i '\
+    s/\[opcache\]/[opcache]\nzend_extension=opcache.so/;\
     s/;opcache.enable=.*/opcache.enable=1/;\
     s/;opcache.enable_cli=.*/opcache.enable_cli=1/;\
     s/;opcache.memory_consumption=.*/opcache.memory_consumption=256/;\
@@ -22,7 +23,8 @@ function conf {
     s/;realpath_cache_size =.*/realpath_cache_size = 4096k/;\
     s/;realpath_cache_ttl =.*/realpath_cache_ttl = 600/;\
     s|;date.timezone =.*|date.timezone = Europe/Paris|;\
-    s|memory_limit =.*|memory_limit = 128M|' ${PHP_DIRECTORY}/lib/php.ini \
+    s/memory_limit =.*/memory_limit = 128M/;\
+    ' ${PHP_DIRECTORY}/lib/php.ini\
     && cp ${PHP_DIRECTORY}/etc/php-fpm.conf.default ${PHP_DIRECTORY}/etc/php-fpm.conf \
     && cp ${PHP_DIRECTORY}/etc/php-fpm.d/www.conf.default ${PHP_DIRECTORY}/etc/php-fpm.d/www.conf
 }

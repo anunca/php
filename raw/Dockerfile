@@ -39,7 +39,7 @@ COPY etc/php/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini\
 && sed -i '\
 s|;date.timezone =.*|date.timezone = Europe/Paris|;\
-s|memory_limit =.*|memory_limit = 128M|;\
+s/memory_limit =.*/memory_limit = 128M/;\
 ' /usr/local/etc/php/php.ini
 
 FROM base-builder AS build-prod
@@ -62,7 +62,7 @@ RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini\
 s/;realpath_cache_size =.*/realpath_cache_size = 4096k/;\
 s/;realpath_cache_ttl =.*/realpath_cache_ttl = 600/;\
 s|;date.timezone =.*|date.timezone = Europe/Paris|;\
-s|memory_limit =.*|memory_limit = 128M|;\
+s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors =.*/display_errors = Off/;\
 ' /usr/local/etc/php/php.ini
 

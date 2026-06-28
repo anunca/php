@@ -14,7 +14,7 @@ RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini\
 s/;opcache.enable=1/opcache.enable=1/;\
 s/;opcache.enable_cli=0/opcache.enable_cli=1/;\
 s|;date.timezone =|date.timezone = Europe/Paris|;\
-s|memory_limit = 128M|memory_limit = 128M|;\
+s/memory_limit =.*/memory_limit = 128M/;\
 ' /usr/local/etc/php/php.ini\
 && echo 'error_log = /dev/stderr' >> /usr/local/etc/php/php.ini\
 && echo 'auto_prepend_file = /usr/local/etc/php/auto_prepend_file.php' >> /usr/local/etc/php/php.ini
@@ -47,6 +47,6 @@ s/;opcache.interned_strings_buffer=8/opcache.interned_strings_buffer=16/;\
 s/;realpath_cache_size = 4096k/realpath_cache_size = 4096k/;\
 s/;realpath_cache_ttl = 120/realpath_cache_ttl = 600/;\
 s|;date.timezone =|date.timezone = Europe/Paris|;\
-s|memory_limit = 128M|memory_limit = 128M|;\
+s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors = On/display_errors = Off/;\
 ' /usr/local/etc/php/php.ini
