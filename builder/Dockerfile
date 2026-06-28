@@ -1,5 +1,5 @@
 ARG COMPOSER_IMAGE=composer:2.9.7
-ARG PHP_IMAGE=php:8.4.5-apache
+ARG PHP_IMAGE=php:8.4.22-apache
 
 FROM $COMPOSER_IMAGE AS composer
 
@@ -38,7 +38,7 @@ FROM base-builder AS dev
 #xdebug
 RUN pecl install xdebug\
   && docker-php-ext-enable xdebug
-COPY etc/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 FROM base-builder AS build-prod
 

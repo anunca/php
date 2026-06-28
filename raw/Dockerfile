@@ -30,17 +30,17 @@ RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
   && pecl install xdebug\
   && docker-php-ext-enable xdebug\
   && apk del -f .virtual
-COPY etc/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 #opcache
-COPY etc/php/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+COPY etc/php/opcache.ini $PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini
 
 #php.ini
-RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini\
+RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
 && sed -i '\
 s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
-' /usr/local/etc/php/php.ini
+' $PHP_INI_DIR/php.ini
 
 FROM base-builder AS build-prod
 
@@ -54,16 +54,16 @@ COPY src .
 FROM base AS prod
 
 #opcache
-COPY etc/php/opcache-prod.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+COPY etc/php/opcache-prod.ini $PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini
 
 #php.ini
-RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini\
+RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini\
 && sed -i '\
 s/;realpath_cache_size =.*/realpath_cache_size = 4096k/;\
 s/;realpath_cache_ttl =.*/realpath_cache_ttl = 600/;\
 s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors =.*/display_errors = Off/;\
-' /usr/local/etc/php/php.ini
+' $PHP_INI_DIR/php.ini
 
 COPY --from=build-prod /var/www/html .

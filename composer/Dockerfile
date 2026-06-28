@@ -1,5 +1,5 @@
 ARG COMPOSER_IMAGE=composer:2.9.7
-ARG PHP_IMAGE=php:8.3.14-cli-alpine
+ARG PHP_IMAGE=php:8.3.31-cli-alpine
 
 FROM $COMPOSER_IMAGE AS composer
 
@@ -28,7 +28,7 @@ RUN composer config --global github-oauth.github.com $GITHUB_TOKEN
 FROM base-builder AS dev
 
 #php ini
-RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
 FROM base-builder AS build-prod
 
@@ -43,6 +43,6 @@ COPY src .
 FROM base AS prod
 
 #php ini
-RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
 COPY --from=build-prod /var/www/html .

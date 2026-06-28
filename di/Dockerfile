@@ -38,7 +38,7 @@ FROM base-builder AS dev
 #xdebug
 RUN pecl install xdebug\
   && docker-php-ext-enable xdebug
-COPY etc/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 FROM base-builder AS build-prod
 

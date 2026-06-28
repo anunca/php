@@ -1,4 +1,4 @@
-ARG PHP_IMAGE=php:8-fpm-alpine
+ARG PHP_IMAGE=php:8.5.7-fpm-alpine
 
 FROM $PHP_IMAGE AS base
 
@@ -10,7 +10,7 @@ RUN apk add --no-cache --virtual .virtual autoconf build-base\
   && docker-php-ext-enable redis\
   && apk del -f .virtual
 
-COPY ./etc/php-fpm/www.conf /usr/local/etc/php-fpm.d/zz-docker.conf
+COPY ./etc/php-fpm/www.conf $($PHP_INI_DIR}-fpm.d/zz-docker.conf
 
 WORKDIR /var/www/html
 

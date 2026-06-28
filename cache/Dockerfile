@@ -15,7 +15,7 @@ RUN docker-php-ext-install -j$(nproc) zip\
   && docker-php-ext-enable opcache
 
 #opcache
-COPY etc/php/opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+COPY etc/php/opcache.ini $PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini
 
 #redis
 RUN pecl install redis\
@@ -47,12 +47,12 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 FROM base-builder AS dev
 
 #php ini
-RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
 #xdebug
 RUN pecl install xdebug\
   && docker-php-ext-enable xdebug
-COPY etc/php/xdebug/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY etc/php/xdebug/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 FROM base-builder AS build-prod
 
@@ -67,6 +67,6 @@ COPY src .
 FROM base AS prod
 
 #php ini
-RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
 COPY --from=build-prod /var/www/html .
