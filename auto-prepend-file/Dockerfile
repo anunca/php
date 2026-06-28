@@ -2,7 +2,7 @@ ARG PHP_IMAGE
 
 FROM $PHP_IMAGE AS base
   
-#extensions
+#PHP extensions
 RUN docker-php-ext-enable opcache
 
 WORKDIR /var/www/html

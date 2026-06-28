@@ -8,7 +8,7 @@ FROM $PHP_IMAGE AS base
 #base dependencies
 RUN apk add --no-cache libzip-dev
   
-#extensions
+#PHP extensions
 RUN docker-php-ext-install -j$(nproc) zip pdo_mysql\
   && docker-php-ext-enable opcache
 
