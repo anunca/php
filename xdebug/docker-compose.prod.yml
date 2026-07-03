@@ -5,7 +5,6 @@ services:
   app:
     build:
       target: prod
-    image: registry.$DOMAIN_NAME/php-xdebug-prod
     volumes:
       - php_src:/var/www/html
 volumes:

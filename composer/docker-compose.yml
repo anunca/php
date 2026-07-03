@@ -2,6 +2,5 @@ services:
   app:
     build:
       target: $TARGET
-    image: $IMAGE
     volumes:
       - ./src:/app

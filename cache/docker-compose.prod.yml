@@ -2,4 +2,3 @@ services:
   app1:
     build:
       target: prod
-    image: registry.$DOMAIN_NAME/php-cache-prod

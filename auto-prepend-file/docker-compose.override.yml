@@ -14,6 +14,7 @@ services:
       dockerfile: Dockerfile
       args:
         PHP_IMAGE:
+    image: $IMAGE
     volumes:
       - ./etc/php-fpm.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
       - ./etc/auto_prepend_file.php:/usr/local/etc/php/auto_prepend_file.php

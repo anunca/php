@@ -6,7 +6,6 @@ services:
   app:
     build:
       target: prod
-    image: registry.$DOMAIN_NAME/todo-prod
     volumes:
       - src:/var/www/html
 volumes:

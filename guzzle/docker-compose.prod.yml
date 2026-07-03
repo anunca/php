@@ -2,4 +2,3 @@ services:
   app:
     build:
       target: prod
-    image: registry.$DOMAIN_NAME/php-guzzle-prod

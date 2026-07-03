@@ -5,4 +5,4 @@ services:
       dockerfile: Dockerfile
       args:
         PHP_IMAGE:
-    image: registry.$DOMAIN_NAME/php-linter
+    image: $IMAGE

@@ -8,7 +8,6 @@ services:
       args:
         APP_ENV: prod
         APP_DEBUG: 0
-    image: registry.$DOMAIN_NAME/php-auto-prepend-file-prod
     environment:
       APP_ENV: prod
       APP_DEBUG: 0

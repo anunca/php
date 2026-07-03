@@ -7,7 +7,6 @@ services:
   app:
     build:
       target: dev
-    image: registry.$DOMAIN_NAME/php-doctrine
     volumes:
       - ./src:/var/www/html
       # - php_var:/var/www/html/var

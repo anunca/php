@@ -2,6 +2,5 @@ services:
   app:
     build:
       target: dev
-    image: registry.$DOMAIN_NAME/php-opcache
     volumes:
       - ./src:/var/www/html

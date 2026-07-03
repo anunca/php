@@ -6,7 +6,6 @@ services:
   app:
     build:
       target: dev
-    image: registry.$DOMAIN_NAME/todo
     volumes:
       - ./src:/var/www/html
     # extra_hosts:
