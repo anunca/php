@@ -2,7 +2,6 @@ services:
   app1:
     build:
       target: dev
-    image: registry.$DOMAIN_NAME/php-cache
     volumes:
       - ./src:/var/www/html
       - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
@@ -13,7 +12,6 @@ services:
   app2:
     build:
       target: dev
-    image: registry.$DOMAIN_NAME/php-cache
     volumes:
       - ./src:/var/www/html
       - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
@@ -24,7 +22,6 @@ services:
   app3:
     build:
       target: dev
-    image: registry.$DOMAIN_NAME/php-cache
     volumes:
       - ./src:/var/www/html
       - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php

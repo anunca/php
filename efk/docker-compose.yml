@@ -26,7 +26,7 @@ services:
       context: ./fluentd
       args:
         FLUENTD_VERSION:
-    image: registry.$DOMAIN_NAME/fluentd
+    image: $IMAGE_FLUENTD
     volumes:
       - ./etc/fluentd:/fluentd/etc
     ports:

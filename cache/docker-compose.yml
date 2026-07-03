@@ -2,7 +2,6 @@ services:
   app1:
     build:
       target: dev
-    image: $IMAGE
     volumes:
       - ./src:/var/www/html
       - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
