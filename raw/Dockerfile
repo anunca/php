@@ -1,5 +1,5 @@
 ARG COMPOSER_IMAGE=composer:2.10.2
-ARG PHP_IMAGE
+ARG PHP_IMAGE=php:8.5.9-fpm-alpine
 
 FROM $COMPOSER_IMAGE AS composer
 
@@ -9,8 +9,7 @@ FROM $PHP_IMAGE AS base
 RUN apk add --no-cache libzip-dev
 
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip pdo_mysql\
-  && docker-php-ext-enable opcache
+RUN docker-php-ext-install -j$(nproc) zip pdo_mysql
 
 WORKDIR /var/www/html
 

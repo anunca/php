@@ -9,8 +9,7 @@ FROM $PHP_IMAGE AS base
 RUN apk add --no-cache libzip-dev
 
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip\
-  && docker-php-ext-enable opcache
+RUN docker-php-ext-install -j$(nproc) zip
 
 WORKDIR /app
 

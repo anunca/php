@@ -4,7 +4,7 @@ services:
       - app1
       - app2
       - app3
-    image: $HAPROXY_VERSION
+    image: $HAPROXY_IMAGE
     volumes:
       - ./etc/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     ports:

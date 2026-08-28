@@ -1,9 +1,6 @@
-ARG PHP_IMAGE
+ARG PHP_IMAGE=php:8.5.9-fpm-alpine
 
 FROM $PHP_IMAGE AS base
-  
-#PHP extensions
-RUN docker-php-ext-enable opcache
 
 WORKDIR /var/www/html
 
@@ -19,7 +16,7 @@ s/memory_limit =.*/memory_limit = 128M/;\
 && echo 'error_log = /dev/stderr' >> $PHP_INI_DIR/php.ini\
 && echo 'auto_prepend_file = $PHP_INI_DIR/auto_prepend_file.php' >> $PHP_INI_DIR/php.ini
 
-CMD php-fpm
+CMD [ "php-fpm" ]
 
 FROM dev AS build
 

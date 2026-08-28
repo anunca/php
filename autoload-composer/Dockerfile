@@ -1,5 +1,5 @@
 ARG COMPOSER_IMAGE=composer:2.10.2
-ARG PHP_IMAGE
+ARG PHP_IMAGE=php:8.5.9-apache
 
 FROM $COMPOSER_IMAGE AS composer
 
@@ -11,8 +11,7 @@ RUN apt update -qq\
   && rm -rf /var/lib/apt/lists/*
   
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip\
-  && docker-php-ext-enable opcache
+RUN docker-php-ext-install -j$(nproc) zip
 
 WORKDIR /app
 

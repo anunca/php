@@ -1,4 +1,4 @@
-ARG OS_VERSION
+ARG OS_VERSION=alpine:3.23.4
 
 FROM $OS_VERSION AS base
 
@@ -35,7 +35,7 @@ RUN ln -s ${PHP_DIRECTORY}/bin/php /usr/local/bin\
 COPY sh/wrapper_script.sh /usr/local/bin/wrapper_script.sh
 RUN chmod +x /usr/local/bin/wrapper_script.sh
 
-CMD sh /usr/local/bin/wrapper_script.sh
+CMD [ "sh", "/usr/local/bin/wrapper_script.sh" ]
 
 FROM dev AS prod
 

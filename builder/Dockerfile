@@ -11,8 +11,7 @@ RUN apt update -qq\
   && rm -rf /var/lib/apt/lists/*
   
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip\
-  && docker-php-ext-enable opcache
+RUN docker-php-ext-install -j$(nproc) zip
 
 #redis
 RUN pecl install redis\
