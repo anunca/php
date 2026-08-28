@@ -1,5 +1,5 @@
-ARG COMPOSER_IMAGE=composer:2.9.7
-ARG PHP_IMAGE=php:8.2.31-apache
+ARG COMPOSER_IMAGE=composer:2.10.2
+ARG PHP_IMAGE=php:8.5.9-apache
 
 FROM $COMPOSER_IMAGE AS composer
 

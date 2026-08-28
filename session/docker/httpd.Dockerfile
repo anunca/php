@@ -1,4 +1,4 @@
-ARG HTTPD_VERSION=httpd:2.4.58-alpine
+ARG HTTPD_VERSION=httpd:2.4.68-alpine
 
 #base
 FROM $HTTPD_VERSION AS base
