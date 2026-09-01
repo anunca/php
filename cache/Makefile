@@ -76,7 +76,7 @@ logs l: ## Follow logs
 ps: ## List containers
 	$(dc) ps -a
 
-clean cl: stop ## Cleanup docker
+clean.all ca: stop ## Cleanup all docker
 	docker system prune -fa && docker volume prune -fa
 
 sh.app2: ## Exec shell

@@ -65,5 +65,5 @@ update: ## Composer update
 remove: ## Composer remove
 	$(dc) run --rm --entrypoint rm app -rf vendor
 
-clean cl: stop ## Cleanup docker
+clean.all ca: stop ## Cleanup all docker
 	docker system prune -fa && docker volume prune -fa
