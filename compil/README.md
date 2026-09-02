@@ -19,7 +19,7 @@ install
 ```sh
 unset PHP_VERSION_NUMBER
 ```
-default php-8.5.9
+default php-8.5.10
 ```sh
 export PHP_VERSION_NUMBER='7.2.34'
 export PHP_VERSION_NUMBER='7.3.27'

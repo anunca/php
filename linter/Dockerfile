@@ -1,4 +1,4 @@
-ARG PHP_IMAGE=php:8.5.9-cli-alpine
+ARG PHP_IMAGE=php:8.5.10-cli-alpine
 
 FROM $PHP_IMAGE
 
