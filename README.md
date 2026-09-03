@@ -4,3 +4,4 @@
 - [Composer](./composer/README.md)
 - [DI](./di/README.md)
 - [Doctrine](./doctrine/README.md)
+- [VSCode PHP](./vscode-php/README.md)
