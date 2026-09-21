@@ -16,7 +16,6 @@ Hands-on PHP examples covering runtime features, dependency management, framewor
 | [Composer require](./composer-require/README.md) | Install Composer packages with authenticated GitHub access |
 | [Composer](./composer/README.md) | Work with Composer repositories and Docker |
 | [DI](./di/README.md) | Build an application with PHP-DI dependency injection |
-| [DI logs](./di/src/logs/README.md) | Document the Slim application log directory |
 | [Doctrine](./doctrine/README.md) | Use Doctrine for database persistence |
 | [EFK](./efk/README.md) | Collect and inspect PHP logs with Fluentd and Kibana |
 | [Fibers](./fibers/README.md) | Explore cooperative concurrency with PHP Fibers |
