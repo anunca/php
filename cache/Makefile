@@ -1,42 +1,44 @@
 .PHONY: help
 .DEFAULT_GOAL := help
 
-include .env
--include .env.local
+-include .env
+include .env.local
 
 ENV ?= dev
 TAG ?= ${ENV}
 DOCKER_SHELL ?= sh
 
-dc_files = docker-compose.override.yml
+dc_files = compose.yml
 
 ifeq ($(ENV),prod)
-	dc_files += docker-compose.prod.yml
+	dc_files += compose.prod.yml
 else
-	dc_files += docker-compose.yml
+	dc_files += compose.dev.yml
 endif
 
 # Cache adapter
 ifeq ($(CACHE_ADAPTER),redis)
 	ifeq ($(ENV),prod)
-		dc_files += docker-compose.redis.prod.yml
+		dc_files += compose.redis.prod.yml
 	else
-		dc_files += docker-compose.redis.yml
+		dc_files += compose.redis.yml
 	endif
 else ifeq ($(CACHE_ADAPTER),memcached)
-	dc_files += docker-compose.memcached.yml
+	dc_files += compose.memcached.yml
 endif
 
 # HAProxy (always added when cache adapter is used)
 ifneq ($(CACHE_ADAPTER),)
 	ifeq ($(ENV),prod)
-		dc_files += docker-compose.override.haproxy.yml docker-compose.haproxy.prod.yml
+		dc_files += compose.haproxy.yml compose.haproxy.prod.yml
 	else
-		dc_files += docker-compose.override.haproxy.yml docker-compose.haproxy.yml
+		dc_files += compose.haproxy.yml compose.haproxy.dev.yml
 	endif
 endif
 
 dc = docker compose $(foreach f,$(dc_files),-f $(f))
+
+export IMAGE REDIS_STACK_VERSION HAPROXY_IMAGE
 
 help h: ## Show help
 	@awk 'BEGIN {FS = ":.*##"} \

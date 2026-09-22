@@ -8,7 +8,7 @@ find_project_root() {
     local parent
 
     while [[ "$directory" != "/" ]]; do
-        if [[ -f "$directory/docker-compose.yml" || -f "$directory/compose.yml" ]]; then
+        if [[ -f "$directory/compose.dev.yml" || -f "$directory/compose.yml" ]]; then
             printf '%s\n' "$directory"
             return 0
         fi
@@ -31,21 +31,21 @@ done
 
 project_root="$(find_project_root "$starting_directory" || true)"
 if [[ -z "$project_root" ]]; then
-    echo "php-docker: could not find docker-compose.yml above $starting_directory" >&2
+    echo "php-docker: could not find compose.dev.yml above $starting_directory" >&2
     exit 1
 fi
 
 export TAG="${TAG:-dev}"
 
 compose=(docker compose --project-directory "$project_root")
-if [[ -f "$project_root/.env" ]]; then
-    compose+=(--env-file "$project_root/.env")
+if [[ -f "$project_root/.env.local" ]]; then
+    compose+=(--env-file "$project_root/.env.local")
 fi
-if [[ -f "$project_root/docker-compose.override.yml" ]]; then
-    compose+=(-f "$project_root/docker-compose.override.yml")
+if [[ -f "$project_root/compose.yml" ]]; then
+    compose+=(-f "$project_root/compose.yml")
 fi
-if [[ -f "$project_root/docker-compose.yml" ]]; then
-    compose+=(-f "$project_root/docker-compose.yml")
+if [[ -f "$project_root/compose.dev.yml" ]]; then
+    compose+=(-f "$project_root/compose.dev.yml")
 else
     compose+=(-f "$project_root/compose.yml")
 fi
