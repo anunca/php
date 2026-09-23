@@ -2,7 +2,7 @@ services:
   web:
     depends_on:
       - app
-    image: $NGINX_VERSION
+    image: $NGINX_IMAGE
     volumes:
       - ./etc/nginx.conf:/etc/nginx/conf.d/default.conf
       - var_run:/var/run
