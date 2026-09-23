@@ -25,7 +25,7 @@ services:
     build:
       context: ./fluentd
       args:
-        FLUENTD_VERSION:
+        FLUENTD_IMAGE:
     image: $IMAGE_FLUENTD
     volumes:
       - ./etc/fluentd:/fluentd/etc
@@ -33,7 +33,7 @@ services:
       - 24224:24224
       - 24224:24224/udp
   elasticsearch:
-    image: $ES_VERSION
+    image: $ES_IMAGE
     environment:
       - "discovery.type=single-node"
     expose:
@@ -41,6 +41,6 @@ services:
     ports:
       - 9200:9200
   kibana:
-    image: $KIBANA_VERSION
+    image: $KIBANA_IMAGE
     ports:
       - 5601:5601
