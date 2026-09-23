@@ -54,5 +54,5 @@ update: ## Composer update
 remove: ## Composer remove
 	$(dc) run --rm --entrypoint rm app -rf vendor
 
-clean.all ca: stop ## Cleanup all docker
-	docker system prune -fa && docker volume prune -fa
+clean: ## Remove containers and volumes
+	$(dc) down -t0 --volumes --remove-orphans
