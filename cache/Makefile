@@ -1,8 +1,10 @@
 .PHONY: help
 .DEFAULT_GOAL := help
 
--include .env
 include .env.local
+-include .env
+
+export
 
 ENV ?= dev
 TAG ?= ${ENV}
@@ -37,8 +39,6 @@ ifneq ($(CACHE_ADAPTER),)
 endif
 
 dc = docker compose $(foreach f,$(dc_files),-f $(f))
-
-export IMAGE REDIS_STACK_VERSION HAPROXY_IMAGE
 
 help h: ## Show help
 	@awk 'BEGIN {FS = ":.*##"} /^[a-zA-Z0-9_. -]+:.*##/ {split($$1,a," "); printf "%-20s %s\n",a[1],$$2}' $(MAKEFILE_LIST)
