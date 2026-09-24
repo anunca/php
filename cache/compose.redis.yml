@@ -1,6 +1,6 @@
 services:
   redis:
-    image: $REDIS_STACK_VERSION
+    image: $REDIS_STACK_IMAGE
     ports:
       - 6379
       - 8001:8001
