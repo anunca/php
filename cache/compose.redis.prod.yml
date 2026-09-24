@@ -1,6 +1,6 @@
 services:
   redis:
-    image: $REDIS_VERSION
+    image: $REDIS_IMAGE
     ports:
       - 6379
     volumes:
