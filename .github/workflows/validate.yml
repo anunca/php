@@ -60,4 +60,6 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Build ${{ matrix.project }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make -C "${{ matrix.project }}" build
