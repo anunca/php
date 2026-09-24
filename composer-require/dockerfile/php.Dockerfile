@@ -24,7 +24,7 @@ USER $UNAME
 
 #add github token
 ARG GITHUB_TOKEN
-RUN composer config --global github-oauth.github.com $GITHUB_TOKEN
+RUN if [ -n "$GITHUB_TOKEN" ]; then composer config --global github-oauth.github.com "$GITHUB_TOKEN"; fi
 
 FROM base-builder AS dev
 
