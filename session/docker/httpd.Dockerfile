@@ -1,7 +1,7 @@
-ARG HTTPD_VERSION=httpd:2.4.68-alpine
+ARG HTTPD_IMAGE=httpd:2.4.68-alpine
 
 #base
-FROM $HTTPD_VERSION AS base
+FROM $HTTPD_IMAGE AS base
 
 RUN apk --no-cache add apache-mod-fcgid
 

@@ -4,7 +4,7 @@ services:
       context: ./docker
       dockerfile: httpd.Dockerfile
       args:
-        HTTPD_VERSION:
+        HTTPD_IMAGE:
     image: test/session-httpd
     depends_on:
       - php-fpm
@@ -37,19 +37,19 @@ services:
       REDIS_PORT:
       REDIS_DATABASE:
   memcached:
-    image: $MEMCACHED_VERSION
+    image: $MEMCACHED_IMAGE
     ports:
       - 11212
   redis:
-    image: $REDIS_VERSION
+    image: $REDIS_IMAGE
     ports:
       - 6379
   dragonfly:
-    image: $DRAGONFLY_VERSION
+    image: $DRAGONFLY_IMAGE
     ports:
       - 6379
   valkey:
-    image: $VALKEY_VERSION
+    image: $VALKEY_IMAGE
     ports:
       - 6379
 volumes:
