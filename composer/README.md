@@ -14,10 +14,12 @@ make help
 prod
 ```sh
 export ENV=prod
+```sh
+export GITHUB_TOKEN=YOUR_GITHUB_TOKEN
 ```
 config
 ```sh
-cat <<EOF>> .env.local
-GITHUB_TOKEN=YOUR_GITHUB_TOKEN
+cat <<EOF>> .env
+GITHUB_TOKEN=$GITHUB_TOKEN
 EOF
 ```

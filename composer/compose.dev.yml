@@ -1,6 +1,6 @@
 services:
   app:
     build:
-      target: $TARGET
+      target: dev
     volumes:
       - ./src:/app

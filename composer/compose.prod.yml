@@ -1,4 +1,4 @@
 services:
   app:
     build:
-      target: $TARGET
+      target: prod

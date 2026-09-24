@@ -1,6 +1,5 @@
 services:
   app:
-    image: $APP_PROD_IMAGE
     build:
       target: prod
       args:

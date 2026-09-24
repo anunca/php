@@ -2,12 +2,12 @@ services:
   web:
     depends_on:
       - app
-    image: $WEB_IMAGE
     build:
       context: .
       dockerfile: Dockerfile.web
       args:
         NGINX_IMAGE:
+    image: $WEB_IMAGE
     ports:
       - 80:80
     volumes:
@@ -26,6 +26,7 @@ services:
         OS_IMAGE:
         PHP_VERSION_NUMBER:
         PHP_DIRECTORY:
+    image: $APP_IMAGE
     volumes:
       - php_run:/var/run/php
     healthcheck:

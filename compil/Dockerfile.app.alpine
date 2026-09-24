@@ -2,7 +2,8 @@ ARG OS_IMAGE=alpine:3.23.4
 
 FROM $OS_IMAGE AS base
 
-RUN apk add --no-cache libxml2-dev sqlite-dev libzip-dev
+RUN apk add --no-cache\
+  libxml2-dev sqlite-dev libzip-dev
 
 FROM base AS build
 
@@ -10,16 +11,14 @@ ARG PHP_VERSION_NUMBER
 ARG PHP_DIRECTORY
 ARG APP_ENV
 
-RUN apk update -q\
-  && apk add\
-    autoconf build-base bison re2c\
-    apk add git\
-  && rm -rf /var/cache/apk/*
-
 WORKDIR /usr/local/src/php
 
 COPY sh/php_install.sh ..
-RUN sh ../php_install.sh
+
+RUN apk add --no-cache --virtual .virtual\
+  autoconf build-base bison re2c linux-headers git\
+  && sh ../php_install.sh\
+  && apk del .virtual
 
 COPY ./etc/php-fpm.conf /usr/local/php/etc/php-fpm.d/www.conf
 

@@ -16,8 +16,7 @@ WORKDIR /var/www/html
 FROM base AS dev
 
 #Composer dependencies
-RUN apk add unzip git\
-  && rm -rf /var/cache/apk/
+RUN apk add --no-cache unzip git
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
