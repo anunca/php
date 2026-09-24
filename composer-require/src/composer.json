@@ -6,6 +6,6 @@
     }
   ],
   "require": {
-    "anunca/hello": "dev-main"
+    "anunca/hello": "0.0.3"
   }
 }

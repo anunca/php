@@ -6,6 +6,6 @@
     }
   ],
   "require": {
-    "anunca/hello": "0.0.1"
+    "anunca/hello": "0.0.3"
   }
 }
