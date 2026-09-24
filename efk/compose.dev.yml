@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
       args:
         PHP_IMAGE:
-    image: $IMAGE
+    image: $APP_IMAGE
     volumes:
       - ./etc/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
       - ./src:/var/www/html
@@ -26,7 +26,7 @@ services:
       context: ./fluentd
       args:
         FLUENTD_IMAGE:
-    image: $IMAGE_FLUENTD
+    image: $APP_IMAGE_FLUENTD
     volumes:
       - ./etc/fluentd:/fluentd/etc
     ports:

@@ -27,3 +27,39 @@ jobs:
             make -C "$dir" config
             echo "::endgroup::"
           done < <(find . -type f -name 'compose.dev.yml' -print | sort)
+
+  build:
+    runs-on: ubuntu-26.04
+    needs: repository
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - amp
+          - auto-prepend-file
+          - autoload-composer
+          - autoload-namespace
+          - autoload
+          - beta
+          - builder
+          - composer-require
+          - composer
+          - di
+          - doctrine
+          - fibers
+          - frankenphp
+          - guzzle
+          - opcache
+          - raw
+          - rector
+          - router
+          - twig
+          - vscode-php
+          - xdebug
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build ${{ matrix.project }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
+        run: make -C "${{ matrix.project }}" build

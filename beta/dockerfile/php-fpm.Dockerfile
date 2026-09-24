@@ -2,13 +2,13 @@ ARG PHP_IMAGE=php:8.5.10-fpm-alpine
 
 FROM $PHP_IMAGE AS base
 
-ARG PHP_REDIS_VERSION=6.1.0RC1
+ARG PHP_REDIS_VERSION=6.3.0
 
 #redis
 RUN apk add --no-cache --virtual .virtual autoconf build-base\
   && pecl install redis-$PHP_REDIS_VERSION\
   && docker-php-ext-enable redis\
-  && apk del -f .virtual
+  && apk del .virtual
 
 COPY ./etc/php-fpm/www.conf $($PHP_INI_DIR}-fpm.d/zz-docker.conf
 
@@ -20,19 +20,19 @@ FROM base AS builder-dev
 # RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
 #   && pecl install xdebug\
 #   && docker-php-ext-enable xdebug\
-#   && apk del -f .virtual
+#   && apk del .virtual
 RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
-  && wget https://xdebug.org/files/xdebug-3.4.0alpha1.tgz\
-  && tar -xzf xdebug-3.4.0alpha1.tgz\
-  && cd xdebug-3.4.0alpha1\
+  && wget https://xdebug.org/files/xdebug-3.5.3.tgz\
+  && tar -xzf xdebug-3.5.3.tgz\
+  && cd xdebug-3.5.3\
   && phpize\
-  && ./configure --enable-xdebug
-# && make\
-# && make install\
-# && cd ..\
-# && rm -rf xdebug*\
-# && docker-php-ext-enable xdebug\
-# && apk del -f .virtual
+  && ./configure --enable-xdebug\
+  && make\
+  && make install\
+  && cd ..\
+  && rm -rf xdebug*\
+  && docker-php-ext-enable xdebug\
+  && apk del .virtual
 
 FROM builder-dev AS dev
 

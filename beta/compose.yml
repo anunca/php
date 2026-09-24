@@ -7,6 +7,7 @@ services:
       dockerfile: dockerfile/nginx.Dockerfile
       args:
         NGINX_IMAGE:
+    image: $WEB_IMAGE
     ports:
       - 80:80
     volumes:
@@ -24,6 +25,7 @@ services:
       args:
         PHP_IMAGE:
         PHP_REDIS_VERSION:
+    image: $APP_IMAGE
     volumes:
       - var_run:/var/run
     healthcheck:

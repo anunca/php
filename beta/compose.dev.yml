@@ -1,11 +1,8 @@
 services:
-  web:
-    image: anunca/php-beta:web
   app:
-    image: anunca/php-beta:app
     build:
       target: dev
-    # volumes:
-    #   - ./src:/var/www/html
+    volumes:
+      - ./src:/var/www/html
     environment:
       APP_ENV: dev

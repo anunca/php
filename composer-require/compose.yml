@@ -6,6 +6,7 @@ services:
       args:
         PHP_IMAGE:
         GITHUB_TOKEN:
+    image: $APP_IMAGE
   nginx:
     depends_on:
       - php
@@ -14,5 +15,6 @@ services:
       dockerfile: dockerfile/nginx.Dockerfile
       args:
         NGINX_IMAGE:
+    image: $WEB_IMAGE
     ports:
       - 80:80

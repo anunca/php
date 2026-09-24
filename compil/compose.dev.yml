@@ -1,6 +1,5 @@
 services:
   app:
-    image: $APP_IMAGE
     build:
       target: dev
       args:

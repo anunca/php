@@ -1,6 +1,6 @@
 ARG COMPOSER_IMAGE=composer:2.10.2
-ARG FRANKENPHP_BUILDER_IMAGE=dunglas/frankenphp:1.12.4-builder-php8.5.10-alpine
-ARG FRANKENPHP_IMAGE=dunglas/frankenphp:1.12.4-php8.5.10
+ARG FRANKENPHP_BUILDER_IMAGE=dunglas/frankenphp:1.12.7-builder-php8.5.10-alpine
+ARG FRANKENPHP_IMAGE=dunglas/frankenphp:1.12.7-php8.5.10-alpine
 
 FROM $COMPOSER_IMAGE AS composer
 

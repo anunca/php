@@ -16,8 +16,7 @@ WORKDIR /var/www/html
 FROM base AS base-builder
 
 #Composer dependencies
-RUN apk add unzip git\
-  && rm -rf /var/cache/apk/
+RUN apk add --no-cache unzip git
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -28,7 +27,7 @@ FROM base-builder AS dev
 RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
   && pecl install xdebug\
   && docker-php-ext-enable xdebug\
-  && apk del -f .virtual
+  && apk del .virtual
 COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 #opcache
