@@ -1,6 +1,6 @@
-ARG OS_VERSION=debian:buster-slim
+ARG OS_IMAGE=debian:buster-slim
 
-FROM $OS_VERSION AS base
+FROM $OS_IMAGE AS base
 
 RUN apt update -qq\
   && apt install -y libxml2-dev libsqlite3-dev libzip-dev\

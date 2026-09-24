@@ -1,6 +1,6 @@
 services:
   app:
-    image: anunca/php-compil:app-prod
+    image: $APP_PROD_IMAGE
     build:
       target: prod
       args:
