@@ -4,5 +4,9 @@ services:
       target: dev
       args:
         APP_ENV: dev
+      cache_from:
+        - type=gha,scope=compil
+      cache_to:
+        - type=gha,scope=compil,mode=max
     volumes:
       - ./src:/var/www/html
