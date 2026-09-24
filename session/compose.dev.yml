@@ -7,14 +7,14 @@ services:
         HTTPD_IMAGE:
     image: test/session-httpd
     depends_on:
-      - php-fpm
+      - app
     ports:
       - 80:80
     volumes:
       - ./etc/apache/app.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
       - run-php-fpm:/run/php
       - ./src:/app
-  php-fpm:
+  app:
     build:
       context: ./docker
       args:
@@ -27,9 +27,9 @@ services:
       - valkey
     volumes:
       - ./etc/php/fpm/www.conf:/usr/local/etc/php-fpm.d/zz-docker.conf:ro
-      # - ./etc/php/php.ini-filesystem:$PHP_INI_DIR/php.ini:ro
-      # - ./etc/php/php.ini-memcached:$PHP_INI_DIR/php.ini:ro
-      - ./etc/php/php.ini-${REDIS_HOST}:$PHP_INI_DIR/php.ini:ro
+      # - ./etc/php/php.ini-filesystem:/usr/local/etc/php/php.ini:ro
+      # - ./etc/php/php.ini-memcached:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php.ini-${REDIS_HOST}:/usr/local/etc/php/php.ini:ro
       - run-php-fpm:/run/php
       - ./src:/app
     environment:
