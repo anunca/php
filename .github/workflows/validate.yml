@@ -61,5 +61,5 @@ jobs:
 
       - name: Build ${{ matrix.project }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
         run: make -C "${{ matrix.project }}" build
