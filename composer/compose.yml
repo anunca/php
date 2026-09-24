@@ -6,4 +6,4 @@ services:
       args:
         PHP_IMAGE:
         GITHUB_TOKEN:
-    image: $IMAGE
+    image: $APP_IMAGE
