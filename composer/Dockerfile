@@ -22,7 +22,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 ARG GITHUB_TOKEN
-RUN if [ -n "$GITHUB_TOKEN" ]; then composer config --global github-oauth.github.com "$GITHUB_TOKEN"; fi
+RUN composer config --global github-oauth.github.com $GITHUB_TOKEN
 
 FROM base-builder AS dev
 
