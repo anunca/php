@@ -2,12 +2,12 @@ services:
   web:
     depends_on:
       - app
-    image: anunca/php-compil:web
+    image: $WEB_IMAGE
     build:
       context: .
       dockerfile: Dockerfile.web
       args:
-        NGINX_VERSION:
+        NGINX_IMAGE:
     ports:
       - 80:80
     volumes:
@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: $DOCKERFILE
       args:
-        OS_VERSION:
+        OS_IMAGE:
         PHP_VERSION_NUMBER:
         PHP_DIRECTORY:
     volumes:
