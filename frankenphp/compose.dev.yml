@@ -3,10 +3,6 @@ services:
     image: demo/frankenphp:dev
     build:
       target: dev
-      cache_from:
-        - type=gha,scope=frankenphp
-      cache_to:
-        - type=gha,scope=frankenphp,mode=max
     environment:
       CADDY_GLOBAL_OPTIONS: debug
     volumes:
