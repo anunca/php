@@ -49,7 +49,6 @@ jobs:
           - doctrine
           - efk
           - fibers
-          - frankenphp
           - guzzle
           - opcache
           - raw
@@ -93,3 +92,26 @@ jobs:
             APP_ENV=dev
           cache-from: type=gha,scope=compil
           cache-to: type=gha,scope=compil,mode=max
+
+  build-frankenphp:
+    runs-on: ubuntu-26.04
+    needs: repository
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build FrankenPHP app
+        uses: docker/build-push-action@v7
+        with:
+          context: ./frankenphp
+          file: ./frankenphp/Dockerfile
+          target: dev
+          push: false
+          build-args: |
+            COMPOSER_IMAGE=composer:2.10.2
+            FRANKENPHP_BUILDER_IMAGE=dunglas/frankenphp:1.12.7-builder-php8.5.10-alpine
+            FRANKENPHP_IMAGE=dunglas/frankenphp:1.12.7-php8.5.10-alpine
+          cache-from: type=gha,scope=frankenphp
+          cache-to: type=gha,scope=frankenphp,mode=max
