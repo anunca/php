@@ -8,7 +8,7 @@ export
 
 ENV ?= dev
 TAG ?= ${ENV}
-DOCKER_SHELL ?= sh
+DOCKER_SHELL ?= bash
 
 dc = docker compose -f compose.yml -f compose.$(ENV).yml
 
@@ -44,3 +44,7 @@ ps: ## List containers
 
 clean: ## Remove containers and volumes
 	$(dc) down -t0 --volumes --remove-orphans
+
+##@ Composer
+composer.install ci: ## Install
+	$(dc) run --rm app composer install

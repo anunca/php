@@ -5,6 +5,6 @@
         }
     },
     "require": {
-        "amphp/parallel": "^2.2"
+        "amphp/parallel": "2.4.0"
     }
 }

@@ -46,8 +46,8 @@ clean: ## Remove containers and volumes
 	$(dc) down -t0 --volumes --remove-orphans
 
 ##@ Composer
-composer.install: ## Install
-	$(dc) run --rm php composer install
+composer.install ci: ## Install
+	$(dc) run --rm app composer install
 
 ##@ DB
 db.create.dump: ## DB create dump
@@ -69,4 +69,4 @@ db.update.dump: ## DB update dump
 	$(dc) exec app sh -c 'php doctrine orm:schema-tool:update --dump-sql'
 
 db.update: ## DB update
-	$(dc) exec app sh -c 'php doctrine orm:schema-tool:update'	
+	$(dc) exec app sh -c 'php doctrine orm:schema-tool:update'

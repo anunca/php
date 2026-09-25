@@ -1,5 +1,5 @@
 services:
-  httpd:
+  web:
     build:
       context: ./docker
       dockerfile: httpd.Dockerfile

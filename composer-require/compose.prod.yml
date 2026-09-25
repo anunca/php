@@ -1,7 +1,7 @@
 services:
-  php:
+  app:
     build:
       target: prod
-  nginx:
+  web:
     build:
       target: prod

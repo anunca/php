@@ -46,5 +46,5 @@ clean: ## Remove containers and volumes
 	$(dc) down -t0 --volumes --remove-orphans
 
 ##@ Composer
-composer.install: ## Install
-	$(dc) run --rm php composer install
+composer.install ci: ## Install
+	$(dc) run --rm app composer install

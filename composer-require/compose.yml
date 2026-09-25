@@ -1,5 +1,5 @@
 services:
-  php:
+  app:
     build:
       context: .
       dockerfile: dockerfile/php.Dockerfile
@@ -7,9 +7,9 @@ services:
         PHP_IMAGE:
         GITHUB_TOKEN:
     image: $APP_IMAGE
-  nginx:
+  web:
     depends_on:
-      - php
+      - app
     build:
       context: .
       dockerfile: dockerfile/nginx.Dockerfile

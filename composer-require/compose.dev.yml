@@ -1,10 +1,10 @@
 services:
-  php:
+  app:
     build:
       target: dev
     volumes:
       - ./src:/usr/share/nginx/html
-  nginx:
+  web:
     build:
       target: dev
     volumes:
