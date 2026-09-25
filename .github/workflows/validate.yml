@@ -43,7 +43,6 @@ jobs:
           - beta
           - builder
           - cache
-          - compil
           - composer-require
           - composer
           - di
@@ -70,3 +69,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
         run: make -C "${{ matrix.project }}" build
+
+  build-compil:
+    runs-on: ubuntu-26.04
+    needs: repository
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build compil app
+        uses: docker/build-push-action@v7
+        with:
+          context: ./compil
+          file: ./compil/Dockerfile.app.alpine
+          target: dev
+          push: false
+          build-args: |
+            OS_IMAGE=alpine:3.23.4
+            PHP_VERSION_NUMBER=8.5.10
+            PHP_DIRECTORY=/usr/local/php
+            APP_ENV=dev
+          cache-from: type=gha,scope=compil
+          cache-to: type=gha,scope=compil,mode=max
