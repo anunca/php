@@ -56,7 +56,6 @@ jobs:
           - router
           - session
           - twig
-          - vscode-php
           - xdebug
     steps:
       - uses: actions/checkout@v7
@@ -68,6 +67,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
         run: make -C "${{ matrix.project }}" build
+
+      - name: Start ${{ matrix.project }}
+        run: make -C "${{ matrix.project }}" start
+
+      - name: Smoke test ${{ matrix.project }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in {1..3}; do
+            if curl --fail --silent --show-error http://localhost/ >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          make -C "${{ matrix.project }}" ps
+          make -C "${{ matrix.project }}" logs || true
+          exit 1
+
+      - name: Clean up
+        if: always()
+        run: make -C "${{ matrix.project }}" clean
 
   build-compil:
     runs-on: ubuntu-26.04
@@ -96,6 +116,27 @@ jobs:
           cache-from: type=gha,scope=compil
           cache-to: type=gha,scope=compil,mode=max
 
+      - name: Start compil app
+        run: make -C compil start
+
+      - name: Smoke test compil app
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in {1..3}; do
+            if curl --fail --silent --show-error http://localhost/ >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          make -C compil ps
+          make -C compil logs || true
+          exit 1
+
+      - name: Clean up
+        if: always()
+        run: make -C compil clean
+
   build-frankenphp:
     runs-on: ubuntu-26.04
     needs: repository
@@ -121,48 +162,10 @@ jobs:
           cache-from: type=gha,scope=frankenphp
           cache-to: type=gha,scope=frankenphp,mode=max
 
-  smoke:
-    runs-on: ubuntu-26.04
-    needs:
-      - build
-      - build-compil
-      - build-frankenphp
-    strategy:
-      fail-fast: false
-      matrix:
-        project:
-          - amp
-          - auto-prepend-file
-          - autoload-composer
-          - autoload-namespace
-          - autoload
-          - beta
-          - builder
-          - cache
-          - composer-require
-          - composer
-          - di
-          - doctrine
-          - efk
-          - fibers
-          - guzzle
-          - opcache
-          - raw
-          - rector
-          - router
-          - session
-          - twig
-          # - vscode-php
-          - xdebug
-          - compil
-          - frankenphp
-    steps:
-      - uses: actions/checkout@v7
+      - name: Start frankenphp app
+        run: make -C frankenphp start
 
-      - name: Start ${{ matrix.project }}
-        run: make -C "${{ matrix.project }}" start
-
-      - name: Smoke test ${{ matrix.project }}
+      - name: Smoke test frankenphp app
         shell: bash
         run: |
           set -euo pipefail
@@ -172,10 +175,10 @@ jobs:
             fi
             sleep 2
           done
-          make -C "${{ matrix.project }}" ps
-          make -C "${{ matrix.project }}" logs || true
+          make -C frankenphp ps
+          make -C frankenphp logs || true
           exit 1
 
       - name: Clean up
         if: always()
-        run: make -C "${{ matrix.project }}" clean
+        run: make -C frankenphp clean

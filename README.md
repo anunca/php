@@ -27,7 +27,6 @@ Hands-on PHP examples covering runtime features, dependency management, framewor
 | [Router](./router/README.md) | Implement a lightweight PHP router using PSR conventions |
 | [Session](./session/README.md) | Compare filesystem, Memcached, Redis, and Dragonfly sessions |
 | [Twig](./twig/README.md) | Render PHP applications with Twig templates |
-| [VSCode PHP](./vscode-php/README.md) | Configure containerized PHP validation in Visual Studio Code |
 | [Xdebug](./xdebug/README.md) | Debug and profile PHP applications with Xdebug |
 
 ## Requirements
