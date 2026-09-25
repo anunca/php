@@ -152,7 +152,7 @@ jobs:
           - router
           - session
           - twig
-          - vscode-php
+          # - vscode-php
           - xdebug
           - compil
           - frankenphp
