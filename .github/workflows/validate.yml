@@ -90,8 +90,9 @@ jobs:
           build-args: |
             OS_IMAGE=alpine:3.23.4
             PHP_VERSION_NUMBER=8.5.10
-            PHP_DIRECTORY=/usr/local/php
-            APP_ENV=dev
+            PHP_SRC_DIR=/usr/local/src/php
+            PHP_DIR=/usr/local/php
+            PHP_INI_DIR=/usr/local/php/etc/php
           cache-from: type=gha,scope=compil
           cache-to: type=gha,scope=compil,mode=max
 
