@@ -38,9 +38,7 @@ RUN pecl install xdebug\
 COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 COPY src/composer.json .
-
 RUN composer install
-
 COPY src .
 
 FROM base-builder AS build-prod

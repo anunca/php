@@ -14,7 +14,7 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini\
 && echo 'error_log = /dev/stderr' >> $PHP_INI_DIR/php.ini\
-&& echo 'auto_prepend_file = $PHP_INI_DIR/auto_prepend_file.php' >> $PHP_INI_DIR/php.ini
+&& echo "auto_prepend_file = $PHP_INI_DIR/auto_prepend_file.php" >> $PHP_INI_DIR/php.ini\
 
 CMD [ "php-fpm" ]
 
@@ -39,7 +39,7 @@ s/;opcache.interned_strings_buffer=.*/opcache.interned_strings_buffer=16/;\
 ' $PHP_INI_DIR/php.ini\
 && echo 'opcache.jit_buffer_size=100M' >> $PHP_INI_DIR/php.ini\
 && echo 'error_log = /dev/stderr' >> $PHP_INI_DIR/php.ini\
-&& echo 'auto_prepend_file = $PHP_INI_DIR/auto_prepend_file.php' >> $PHP_INI_DIR/php.ini\
+&& echo "auto_prepend_file = $PHP_INI_DIR/auto_prepend_file.php" >> $PHP_INI_DIR/php.ini\
 && sed -i '\
 s/;realpath_cache_size =.*/realpath_cache_size = 4096k/;\
 s/;realpath_cache_ttl =.*/realpath_cache_ttl = 600/;\

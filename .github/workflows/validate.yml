@@ -131,7 +131,29 @@ jobs:
       fail-fast: false
       matrix:
         project:
+          - amp
+          - auto-prepend-file
+          - autoload-composer
+          - autoload-namespace
+          - autoload
           - beta
+          - builder
+          - cache
+          - composer-require
+          - composer
+          - di
+          - doctrine
+          - efk
+          - fibers
+          - guzzle
+          - opcache
+          - raw
+          - rector
+          - router
+          - session
+          - twig
+          - vscode-php
+          - xdebug
           - compil
           - frankenphp
     steps:

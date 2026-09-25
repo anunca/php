@@ -1,5 +1,5 @@
 services:
-  app1:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,4 +9,4 @@ services:
     volumes:
       - ./etc/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
     ports:
-      - 80:80
+      - 80

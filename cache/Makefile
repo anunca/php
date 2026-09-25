@@ -8,7 +8,7 @@ export
 
 ENV ?= dev
 TAG ?= ${ENV}
-DOCKER_SHELL ?= sh
+DOCKER_SHELL ?= bash
 
 dc_files = compose.yml
 
@@ -59,10 +59,10 @@ stop st: ## Stop containers
 restart r: stop start ## Restart
 
 run: ## Run shell
-	$(dc) run --rm --entrypoint $(DOCKER_SHELL) app1
+	$(dc) run --rm --entrypoint $(DOCKER_SHELL) app
 
 shell sh: ## Exec shell
-	$(dc) exec app1 $(DOCKER_SHELL)
+	$(dc) exec app $(DOCKER_SHELL)
 
 logs l: ## Follow logs
 	$(dc) logs -f
@@ -78,6 +78,10 @@ sh.app2: ## Exec shell
 
 sh.app3: ## Exec shell
 	$(dc) exec app3 $(DOCKER_SHELL)
+
+##@ Composer
+composer.install ci: ## Install
+	$(dc) run --rm app composer install
 
 ##@ Redis
 redis.sh: ## Shell

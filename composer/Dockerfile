@@ -36,9 +36,7 @@ s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
 COPY src/composer.json .
-
 RUN composer install
-
 COPY src .
 
 FROM base-builder AS build-prod
