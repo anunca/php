@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help config build start stop restart run shell logs ps clean
 .DEFAULT_GOAL := help
 
 include .env.local
@@ -31,10 +31,10 @@ stop st: ## Stop containers
 restart r: stop start ## Restart
 
 run: ## Run shell
-	$(dc) run --rm --entrypoint $(DOCKER_SHELL) php
+	$(dc) run --rm --entrypoint $(DOCKER_SHELL) app
 
 shell sh: ## Exec shell
-	$(dc) exec php $(DOCKER_SHELL)
+	$(dc) exec app $(DOCKER_SHELL)
 
 logs l: ## Follow logs
 	$(dc) logs -f

@@ -10,7 +10,7 @@ RUN apk add --no-cache --virtual .virtual autoconf build-base\
   && docker-php-ext-enable redis\
   && apk del .virtual
 
-COPY ./etc/php-fpm/www.conf $($PHP_INI_DIR}-fpm.d/zz-docker.conf
+COPY ./etc/php-fpm/www.conf $PHP_INI_DIR-fpm.d/zz-docker.conf
 
 WORKDIR /var/www/html
 

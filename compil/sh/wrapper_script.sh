@@ -2,7 +2,7 @@
 
 #https://docs.docker.com/config/containers/multi-service_container/
 
-php-fpm -c /usr/local/php/etc/php-fpm.conf -D
+php-fpm -c /usr/local/php/etc/php-fpm.d/www.conf
 status=$?
 if [[ $status -ne 0 ]]
 then

@@ -11,7 +11,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - var_run:/var/run
+      - var_run_php:/var/run/php
     healthcheck:
       test: [ 'CMD', 'curl', '--fail', 'http://localhost' ]
       interval: 10s
@@ -27,7 +27,7 @@ services:
         PHP_REDIS_VERSION:
     image: $APP_IMAGE
     volumes:
-      - var_run:/var/run
+      - var_run_php:/var/run/php
     healthcheck:
       test: [ 'CMD', 'pidof', 'php-fpm' ]
       interval: 10s
@@ -35,4 +35,4 @@ services:
       retries: 3
       start_period: 10s
 volumes:
-  var_run:
+  var_run_php:

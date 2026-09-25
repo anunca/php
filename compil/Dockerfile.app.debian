@@ -2,43 +2,57 @@ ARG OS_IMAGE=debian:buster-slim
 
 FROM $OS_IMAGE AS base
 
+ARG PHP_DIR
+
 RUN apt update -qq\
   && apt install -y libxml2-dev libsqlite3-dev libzip-dev\
   && rm -rf /var/lib/apt/lists/*
 
-FROM base AS build
-
-ARG PHP_VERSION_NUMBER
-ARG PHP_DIRECTORY
-ARG APP_ENV
-
-RUN apt update -qq\
-  && apt install -y\
-    autoconf build-essential bison re2c pkg-config\
-    git\
-  && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /usr/local/src/php
-
-COPY sh/php_install.sh ..
-RUN sh ../php_install.sh
-
-COPY ./etc/php-fpm.conf /usr/local/php/etc/php-fpm.d/www.conf
-
-FROM base AS dev
-
-ARG PHP_DIRECTORY
-
-COPY --from=build ${PHP_DIRECTORY} ${PHP_DIRECTORY}
-
-RUN ln -s ${PHP_DIRECTORY}/bin/php /usr/local/bin\
-  && ln -s ${PHP_DIRECTORY}/sbin/php-fpm /usr/local/bin
+RUN ln -s ${PHP_DIR}/bin/php /usr/local/bin\
+  && ln -s ${PHP_DIR}/sbin/php-fpm /usr/local/bin
 
 COPY sh/wrapper_script.sh /usr/local/bin/wrapper_script.sh
 RUN chmod +x /usr/local/bin/wrapper_script.sh
 
+WORKDIR $PHP_DIR
+
 CMD [ "sh", "/usr/local/bin/wrapper_script.sh" ]
 
-FROM dev AS prod
+FROM base AS build
+
+ARG PHP_SRC_DIR
+ARG PHP_VERSION_NUMBER
+ARG PHP_DIR
+ARG PHP_INI_DIR
+
+WORKDIR $PHP_SRC_DIR
+
+COPY sh/php_install.sh ..
+
+RUN apt update -qq\
+  && apt install -y autoconf build-essential bison re2c pkg-config git\
+  && sh ../php_install.sh\
+  && rm -rf /var/lib/apt/lists/*
+
+RUN cp ${PHP_DIR}/etc/php-fpm.conf.default ${PHP_DIR}/etc/php-fpm.conf
+COPY ./etc/php-fpm.conf $PHP_INI_DIR-fpm.d/www.conf
+
+FROM base AS dev
+
+ARG PHP_DIR
+ARG PHP_SRC_DIR
+ARG PHP_INI_DIR
+
+COPY --from=build ${PHP_DIR} ${PHP_DIR}
+COPY --from=build ${PHP_SRC_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
+
+FROM base AS prod
+
+ARG PHP_DIR
+ARG PHP_SRC_DIR
+ARG PHP_INI_DIR
+
+COPY --from=build ${PHP_DIR} ${PHP_DIR}
+COPY --from=build ${PHP_SRC_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 COPY ./src /var/www/html

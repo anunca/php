@@ -2,5 +2,3 @@ services:
   app:
     build:
       target: prod
-      args:
-        APP_ENV: prod

@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help config build start stop restart run shell logs ps clean
 .DEFAULT_GOAL := help
 
 include .env.local
