@@ -15,13 +15,6 @@ RUN apk add --no-cache unzip git
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-#add user
-ARG UNAME=www-data
-RUN apk add --no-cache sudo
-RUN echo "$UNAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-USER $UNAME
-
 #add github token
 ARG GITHUB_TOKEN
 RUN composer config --global github-oauth.github.com $GITHUB_TOKEN
@@ -29,17 +22,13 @@ RUN composer config --global github-oauth.github.com $GITHUB_TOKEN
 FROM base-builder AS dev
 
 COPY src/composer.json .
-
-RUN sudo -E composer install
-
+RUN composer install
 COPY src .
 
 FROM base-builder AS prod-builder
 
 COPY src/composer.json .
-
-RUN sudo -E composer install --no-dev
-
+RUN composer install --no-dev
 COPY src .
 
 FROM base AS prod

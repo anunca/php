@@ -11,7 +11,7 @@ RUN apk add --no-cache libzip-dev
 #PHP extensions
 RUN docker-php-ext-install -j$(nproc) zip
 
-WORKDIR /app
+WORKDIR /usr/share/nginx/html
 
 FROM base AS base-builder
 
@@ -54,4 +54,4 @@ FROM base AS prod
 #php ini
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
-COPY --from=build-prod /var/www/html .
+COPY --from=build-prod /usr/share/nginx/html .

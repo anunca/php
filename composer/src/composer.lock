@@ -1,0 +1,39 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "5392bc628396d756a170c52ab38670ce",
+    "packages": [
+        {
+            "name": "anunca/hello",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:anunca/hello.git",
+                "reference": "07ce6383217911719056ee06112864d5636ea76b"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Anunca\\Hello\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "hello world",
+            "time": "2026-09-24T19:41:02+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {},
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
+}

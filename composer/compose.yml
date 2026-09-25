@@ -7,3 +7,14 @@ services:
         PHP_IMAGE:
         GITHUB_TOKEN:
     image: $APP_IMAGE
+  web:
+    depends_on:
+      - app
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+      args:
+        NGINX_IMAGE:
+    image: $WEB_IMAGE
+    ports:
+      - 80:80
