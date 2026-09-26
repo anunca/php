@@ -20,9 +20,9 @@ FROM base AS dev
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# COPY src/composer.json .
-
-# RUN composer install
+COPY src/composer.json src/composer.lock ./
+RUN composer install
+COPY src .
 
 RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
 && sed -i '\
@@ -34,9 +34,8 @@ s/memory_limit =.*/memory_limit = 128M/;\
 
 FROM base AS prod
 
-COPY ./src .
-
-RUN composer install --no-dev --optimize-autoloader\
-  && composer dump-autoload --no-dev --classmap-authoritative
+COPY src/composer.json src/composer.lock ./
+RUN composer install --no-dev --optimize-autoloader
+COPY src .
 
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini

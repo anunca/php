@@ -43,7 +43,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 FROM base-builder AS dev
 
-COPY src/composer.json .
+COPY src/composer.json src/composer.lock ./
 RUN composer install
 COPY src .
 
@@ -52,7 +52,7 @@ RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
 FROM base-builder AS builder-prod
 
-COPY src/composer.json .
+COPY src/composer.json src/composer.lock ./
 RUN composer install --no-dev --optimize-autoloader
 COPY src .
 
@@ -66,7 +66,6 @@ RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
 #php opcache
 COPY <<EOF $PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini
-zend_extension=opcache
 [opcache]
 opcache.enable=1
 opcache.enable_cli=1

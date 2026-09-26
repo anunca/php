@@ -25,6 +25,10 @@ RUN apt update -qq\
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+COPY src/composer.json src/composer.lock ./
+RUN composer install
+COPY src .
+
 RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
 && sed -i '\
 s/;opcache.enable=.*/opcache.enable=1/;\
@@ -34,14 +38,13 @@ s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
 FROM dev AS build
- 
-COPY src .
 
 ARG APP_ENV
 ARG APP_DEBUG
 
-RUN composer install --no-dev --optimize-autoloader\
-  && composer dump-autoload --no-dev --classmap-authoritative
+COPY src/composer.json src/composer.lock ./
+RUN composer install --no-dev --optimize-autoloader
+COPY src .
 
 FROM base AS prod
  

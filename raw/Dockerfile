@@ -42,11 +42,8 @@ s/memory_limit =.*/memory_limit = 128M/;\
 
 FROM base-builder AS build-prod
 
-COPY src/composer.json .
-
-RUN composer install --no-dev --optimize-autoloader\
-  && composer dump-autoload --no-dev --classmap-authoritative
-
+COPY src/composer.json src/composer.lock ./
+RUN composer install --no-dev --optimize-autoloader
 COPY src .
 
 FROM base AS prod

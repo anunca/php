@@ -57,19 +57,24 @@ RUN pecl install xdebug\
   && docker-php-ext-enable xdebug
 COPY etc/php/xdebug/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
-COPY src/composer.json .
+COPY src/composer.json src/composer.lock ./
 RUN composer install
 COPY src .
 
 FROM base-builder AS build-prod
 
-COPY src/composer.json .
-
-#TODO debug error
-RUN composer install --no-dev --optimize-autoloader\
-  && composer dump-autoload --no-dev --classmap-authoritative
-
+COPY src/composer.json src/composer.lock ./
+RUN composer install \
+        --no-dev \
+        --no-interaction \
+        --no-progress \
+        --prefer-dist \
+        --no-autoloader
 COPY src .
+RUN composer dump-autoload \
+    --no-dev \
+    --optimize \
+    --classmap-authoritative
 
 FROM base AS prod
 

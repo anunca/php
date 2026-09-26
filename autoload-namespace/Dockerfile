@@ -25,12 +25,15 @@ RUN apt update -qq\
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-FROM dev AS build
-
+COPY src/composer.json src/composer.lock ./
+RUN composer install
 COPY src .
 
-RUN composer install --no-dev --optimize-autoloader\
-  && composer dump-autoload --no-dev --classmap-authoritative
+FROM dev AS build
+
+COPY src/composer.json src/composer.lock ./
+RUN composer install --no-dev --optimize-autoloader
+COPY src .
 
 FROM base AS prod
 
