@@ -1,0 +1,42 @@
+services:
+  haproxy:
+    depends_on:
+      - app1
+      - app2
+      - app3
+    image: $HAPROXY_IMAGE
+    volumes:
+      - ./etc/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - 80:80
+    restart: unless-stopped
+  app1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_IMAGE:
+    volumes:
+      - ./etc/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+    ports:
+      - 80
+  app2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_IMAGE:
+    volumes:
+      - ./etc/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+    ports:
+      - 80
+  app3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_IMAGE:
+    volumes:
+      - ./etc/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf:ro
+    ports:
+      - 80

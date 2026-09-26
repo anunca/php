@@ -1,0 +1,18 @@
+{
+    "name": "demo/app",
+    "type": "project",
+    "require": {
+        "guzzlehttp/guzzle": "^7.3"
+    },
+    "authors": [
+        {
+            "name": "H A",
+            "email": "ha@demo.app"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Demo\\App\\": "src/"
+        }
+    }
+}

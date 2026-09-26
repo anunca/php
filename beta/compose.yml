@@ -1,0 +1,38 @@
+services:
+  web:
+    depends_on:
+      - app
+    build:
+      context: .
+      dockerfile: dockerfile/nginx.Dockerfile
+      args:
+        NGINX_IMAGE:
+    image: $WEB_IMAGE
+    ports:
+      - 80:80
+    volumes:
+      - var_run_php:/var/run/php
+    healthcheck:
+      test: [ 'CMD', 'curl', '--fail', 'http://localhost' ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile/php-fpm.Dockerfile
+      args:
+        PHP_IMAGE:
+        PHP_REDIS_VERSION:
+    image: $APP_IMAGE
+    volumes:
+      - var_run_php:/var/run/php
+    healthcheck:
+      test: [ 'CMD', 'pidof', 'php-fpm' ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+volumes:
+  var_run_php:

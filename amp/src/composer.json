@@ -1,0 +1,10 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Demo\\Amp\\": "src/"
+        }
+    },
+    "require": {
+        "amphp/parallel": "2.4.0"
+    }
+}

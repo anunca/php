@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      target: prod
+      args:
+        APP_ENV: prod
+        APP_DEBUG: 0
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: 0

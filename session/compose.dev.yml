@@ -1,0 +1,56 @@
+services:
+  web:
+    build:
+      context: ./docker
+      dockerfile: httpd.Dockerfile
+      args:
+        HTTPD_IMAGE:
+    image: test/session-httpd
+    depends_on:
+      - app
+    ports:
+      - 80:80
+    volumes:
+      - ./etc/apache/app.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf:ro
+      - run-php-fpm:/run/php
+      - ./src:/app
+  app:
+    build:
+      context: ./docker
+      args:
+        PHP_IMAGE:
+    image: $APP_IMAGE
+    depends_on:
+      - memcached
+      - redis
+      - dragonfly
+      - valkey
+    volumes:
+      - ./etc/php/fpm/www.conf:/usr/local/etc/php-fpm.d/zz-docker.conf:ro
+      # - ./etc/php/php.ini-filesystem:/usr/local/etc/php/php.ini:ro
+      # - ./etc/php/php.ini-memcached:/usr/local/etc/php/php.ini:ro
+      - ./etc/php/php.ini-${REDIS_HOST}:/usr/local/etc/php/php.ini:ro
+      - run-php-fpm:/run/php
+      - ./src:/app
+    environment:
+      REDIS_HOST:
+      REDIS_PORT:
+      REDIS_DATABASE:
+  memcached:
+    image: $MEMCACHED_IMAGE
+    ports:
+      - 11212
+  redis:
+    image: $REDIS_IMAGE
+    ports:
+      - 6379
+  dragonfly:
+    image: $DRAGONFLY_IMAGE
+    ports:
+      - 6379
+  valkey:
+    image: $VALKEY_IMAGE
+    ports:
+      - 6379
+volumes:
+  run-php-fpm:

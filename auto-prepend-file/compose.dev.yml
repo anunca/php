@@ -1,0 +1,9 @@
+services:
+  web:
+    volumes:
+      - ./src:/var/www/html
+  app:
+    build:
+      target: dev
+    volumes:
+      - ./src:/var/www/html

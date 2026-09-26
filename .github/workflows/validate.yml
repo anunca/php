@@ -1,0 +1,151 @@
+name: Validate projects
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  repository:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check whitespace
+        run: git diff --check
+
+      - name: Validate Docker Compose projects
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r file; do
+            echo "::group::$file"
+            dir="$(dirname "$file")"
+            make -C "$dir" config
+            echo "::endgroup::"
+          done < <(find . -type f -name 'compose.dev.yml' -print | sort)
+
+  build:
+    runs-on: ubuntu-26.04
+    needs: repository
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - amp
+          - auto-prepend-file
+          - autoload-composer
+          - autoload-namespace
+          - autoload
+          - beta
+          - builder
+          - cache
+          - composer-require
+          - composer
+          - di
+          - doctrine
+          - efk
+          - fibers
+          - guzzle
+          - opcache
+          - raw
+          - rector
+          - router
+          - session
+          - twig
+          - xdebug
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build ${{ matrix.project }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMPOSER_GITHUB_TOKEN }}
+        run: make -C "${{ matrix.project }}" build
+
+      - name: Start ${{ matrix.project }}
+        run: make -C "${{ matrix.project }}" start
+
+      - name: Smoke test ${{ matrix.project }}
+        run: make -C "${{ matrix.project }}" smoke
+
+      - name: Clean up
+        if: always()
+        run: make -C "${{ matrix.project }}" clean
+
+  build-compil:
+    runs-on: ubuntu-26.04
+    needs: repository
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build compil app
+        uses: docker/build-push-action@v7
+        with:
+          context: ./compil
+          file: ./compil/Dockerfile.app.alpine
+          target: dev
+          push: false
+          load: true
+          tags: registry.app.internal/compil-app:dev
+          build-args: |
+            OS_IMAGE=alpine:3.23.4
+            PHP_VERSION_NUMBER=8.5.10
+            PHP_SRC_DIR=/usr/local/src/php
+            PHP_DIR=/usr/local/php
+            PHP_INI_DIR=/usr/local/php/etc/php
+          cache-from: type=gha,scope=compil
+          cache-to: type=gha,scope=compil,mode=max
+
+      - name: Start compil app
+        run: make -C compil start
+
+      - name: Smoke test compil app
+        run: make -C compil smoke
+
+      - name: Clean up
+        if: always()
+        run: make -C compil clean
+
+  build-frankenphp:
+    runs-on: ubuntu-26.04
+    needs: repository
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build FrankenPHP app
+        uses: docker/build-push-action@v7
+        with:
+          context: ./frankenphp
+          file: ./frankenphp/Dockerfile
+          target: dev
+          push: false
+          load: true
+          tags: demo/frankenphp:dev
+          build-args: |
+            COMPOSER_IMAGE=composer:2.10.2
+            FRANKENPHP_BUILDER_IMAGE=dunglas/frankenphp:1.12.7-builder-php8.5.10-alpine
+            FRANKENPHP_IMAGE=dunglas/frankenphp:1.12.7-php8.5.10-alpine
+          cache-from: type=gha,scope=frankenphp
+          cache-to: type=gha,scope=frankenphp,mode=max
+
+      - name: Start frankenphp app
+        run: make -C frankenphp start
+
+      - name: Smoke test frankenphp app
+        run: make -C frankenphp smoke
+
+      - name: Clean up
+        if: always()
+        run: make -C frankenphp clean

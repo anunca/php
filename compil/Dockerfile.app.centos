@@ -1,0 +1,60 @@
+ARG OS_IMAGE=centos:centos8
+
+FROM $OS_IMAGE AS base
+
+ARG PHP_DIR
+
+RUN yum update -y -q\
+  && yum install -y libxml2-devel sqlite-devel libzip-devel\
+  && yum clean all
+
+RUN ln -s ${PHP_DIR}/bin/php /usr/local/bin\
+  && ln -s ${PHP_DIR}/sbin/php-fpm /usr/local/bin
+
+COPY sh/wrapper_script.sh /usr/local/bin/wrapper_script.sh
+RUN chmod +x /usr/local/bin/wrapper_script.sh
+
+WORKDIR $PHP_DIR
+
+CMD [ "sh", "/usr/local/bin/wrapper_script.sh" ]
+
+FROM base AS build
+
+ARG PHP_SRC_DIR
+ARG PHP_VERSION_NUMBER
+ARG PHP_DIR
+ARG PHP_INI_DIR
+
+WORKDIR $PHP_SRC_DIR
+
+COPY sh/php_install.sh ..
+
+RUN yum update -y -q\
+  && yum groupinstall -y 'Development tools'\
+  && yum --enablerepo=PowerTools install -y re2c\
+  && yum install -y git\
+  && sh ../php_install.sh\
+  && yum clean all
+
+RUN cp ${PHP_DIR}/etc/php-fpm.conf.default ${PHP_DIR}/etc/php-fpm.conf
+COPY ./etc/php-fpm.conf $PHP_INI_DIR-fpm.d/www.conf
+
+FROM base AS dev
+
+ARG PHP_DIR
+ARG PHP_SRC_DIR
+ARG PHP_INI_DIR
+
+COPY --from=build ${PHP_DIR} ${PHP_DIR}
+COPY --from=build ${PHP_SRC_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
+
+FROM base AS prod
+
+ARG PHP_DIR
+ARG PHP_SRC_DIR
+ARG PHP_INI_DIR
+
+COPY --from=build ${PHP_DIR} ${PHP_DIR}
+COPY --from=build ${PHP_SRC_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
+
+COPY ./src /var/www/html

@@ -1,0 +1,16 @@
+services:
+  memcached1:
+    image: $MEMCACHED_IMAGE
+    ports:
+      - 11211
+    command: -m 64
+  memcached2:
+    image: $MEMCACHED_IMAGE
+    ports:
+      - 11211
+    command: -m 64
+  memcached3:
+    image: $MEMCACHED_IMAGE
+    ports:
+      - 11211
+    command: -m 64

@@ -1,0 +1,9 @@
+.env*
+!.env.local
+
+src/vendor
+var
+
+src/public/opcache.php
+src/public/phpinfo.php
+src/public/xdebuginfo.php

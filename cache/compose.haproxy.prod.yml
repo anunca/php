@@ -1,0 +1,10 @@
+services:
+  app1:
+    build:
+      target: prod
+  app2:
+    build:
+      target: prod
+  app3:
+    build:
+      target: prod

@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile/php.Dockerfile
+      args:
+        PHP_IMAGE:
+      secrets:
+        - github_token
+    image: $APP_IMAGE
+  web:
+    depends_on:
+      - app
+    build:
+      context: .
+      dockerfile: dockerfile/nginx.Dockerfile
+      args:
+        NGINX_IMAGE:
+    image: $WEB_IMAGE
+    ports:
+      - 80:80
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN

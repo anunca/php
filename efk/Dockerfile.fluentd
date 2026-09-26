@@ -1,0 +1,9 @@
+ARG FLUENTD_IMAGE=fluentd:v1.19.3-1.0
+FROM $FLUENTD_IMAGE
+
+USER root
+
+RUN ["gem", "install", "elasticsearch", "--no-document", "--version", "7.17.7 "]
+RUN ["gem", "install", "fluent-plugin-elasticsearch", "--no-document", "--version", "5.2.4"]
+
+USER fluent

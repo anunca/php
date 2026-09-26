@@ -1,0 +1,47 @@
+services:
+  app:
+    depends_on:
+      - fluentd
+      - elasticsearch
+      - kibana
+    build:
+      context: .
+      dockerfile: Dockerfile.apache
+      args:
+        PHP_IMAGE:
+    image: $APP_IMAGE
+    volumes:
+      - ./etc/apache/000-default.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./src:/var/www/html
+    ports:
+      - 80:80
+    logging:
+      driver: fluentd
+      options:
+        # fluentd-address: localhost:24224
+        fluentd-address: docker.for.mac.localhost:24224
+        tag: httpd.access
+  fluentd:
+    build:
+      context: .
+      dockerfile: Dockerfile.fluentd
+      args:
+        FLUENTD_IMAGE:
+    image: $APP_IMAGE_FLUENTD
+    volumes:
+      - ./etc/fluentd:/fluentd/etc
+    ports:
+      - 24224:24224
+      - 24224:24224/udp
+  elasticsearch:
+    image: $ES_IMAGE
+    environment:
+      - "discovery.type=single-node"
+    expose:
+      - 9200
+    ports:
+      - 9200:9200
+  kibana:
+    image: $KIBANA_IMAGE
+    ports:
+      - 5601:5601

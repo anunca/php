@@ -1,0 +1,38 @@
+services:
+  web:
+    depends_on:
+      - app
+    image: $NGINX_IMAGE
+    volumes:
+      - ./etc/nginx/fastcgi_params:/etc/nginx/fastcgi_params
+      - var_run:/var/run
+    ports:
+      - 80:80
+  app:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_IMAGE:
+    image: $APP_IMAGE
+    volumes:
+      - ./etc/php/php-fpm.conf:/usr/local/etc/php-fpm.d/zz-docker.conf
+      - var_run:/var/run
+    environment:
+      MYSQL_ROOT_USER:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE:
+  db:
+    image: $MYSQL_IMAGE
+    volumes:
+      - db:/var/lib/mysql
+    ports:
+      - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE:
+volumes:
+  var_run:
+  db:
