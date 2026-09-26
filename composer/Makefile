@@ -1,4 +1,4 @@
-.PHONY: help config build start stop restart run shell logs ps clean
+.PHONY: help config build start stop restart run shell logs ps smoke clean
 .DEFAULT_GOAL := help
 
 include .env.local
@@ -41,6 +41,15 @@ logs l: ## Follow logs
 
 ps: ## List containers
 	$(dc) ps -a
+
+smoke: ## Verify HTTP application readiness
+	@for attempt in $$(seq 1 30); do \
+		if curl --fail --silent --show-error http://localhost/ >/dev/null; then exit 0; fi; \
+		sleep 2; \
+	done; \
+	$(MAKE) ps; \
+	$(MAKE) logs || true; \
+	exit 1
 
 clean: ## Remove containers and volumes
 	$(dc) down -t0 --volumes --remove-orphans
