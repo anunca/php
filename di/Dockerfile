@@ -35,9 +35,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 FROM base-builder AS dev
 
 #xdebug
-RUN pecl install xdebug\
-  && docker-php-ext-enable xdebug
-COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+# RUN pecl install xdebug\
+#   && docker-php-ext-enable xdebug
+# COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 COPY src/composer.json src/composer.lock ./
 RUN composer install

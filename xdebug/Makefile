@@ -48,6 +48,19 @@ clean: ## Remove containers and volumes
 db.ct: ## DB import
 	$(dc) exec -T db mysql -u${MYSQL_USER} -p${MYSQL_ROOT_PASSWORD} < sql/database.sql
 
+##@ Composer
+composer.install ci: ## Run composer install
+	$(dc) run --rm app composer install
+
+composer.fund cf: ## Run composer fund
+	$(dc) run --rm app composer fund
+
+composer.update cu: ## Run composer update
+	$(dc) run --rm app composer update
+
+composer.remove cr: ## Remove vendor directory
+	$(dc) run --rm app rm -rf vendor
+
 ##@ Test
 smoke: ## Verify HTTP application readiness
 	@for attempt in $$(seq 1 30); do \
