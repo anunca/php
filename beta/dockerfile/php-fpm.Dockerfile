@@ -17,23 +17,19 @@ WORKDIR /var/www/html
 FROM base AS builder-dev
 
 #xdebug
-# RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
-#   && pecl install xdebug\
-#   && docker-php-ext-enable xdebug\
-#   && apk del .virtual
+WORKDIR /tmp/xdebug
 RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
-  && wget https://xdebug.org/files/xdebug-3.5.3.tgz\
-  && tar -xzf xdebug-3.5.3.tgz\
-  && cd xdebug-3.5.3\
+  && wget -q https://xdebug.org/files/xdebug-3.5.3.tgz\
+  && tar --strip-components=1 -xzf xdebug-3.5.3.tgz\
   && phpize\
   && ./configure --enable-xdebug\
   && make\
   && make install\
-  && cd ..\
-  && rm -rf xdebug*\
+  && rm xdebug-3.5.3.tgz\
   && docker-php-ext-enable xdebug\
   && apk del .virtual
 
+WORKDIR /var/www/html
 FROM builder-dev AS dev
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
