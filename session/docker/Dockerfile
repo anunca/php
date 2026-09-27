@@ -2,15 +2,15 @@ ARG PHP_IMAGE=php:8.5.10-fpm-alpine
 
 FROM $PHP_IMAGE AS base
 
-SHELL ["/bin/ash", "-o", "pipefail", "-c"]
-
 #php memcached
+# hadolint ignore=DL4006
 RUN apk --no-cache add autoconf g++ make zlib-dev libmemcached-dev libmemcached\
   && yes '' | pecl install --force memcached\
   && docker-php-ext-enable memcached\
   && apk del --purge autoconf g++ make zlib-dev libmemcached-dev
 
 #php redis
+# hadolint ignore=DL4006
 RUN apk --no-cache add autoconf g++ make\
   && yes '' | pecl install --force redis\
   && docker-php-ext-enable redis\
