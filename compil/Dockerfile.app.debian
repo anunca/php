@@ -4,8 +4,8 @@ FROM $OS_IMAGE AS base
 
 ARG PHP_DIR
 
-RUN apt update -qq\
-  && apt install -y libxml2-dev libsqlite3-dev libzip-dev\
+RUN apt-get update -qq\
+  && apt-get install -y libxml2-dev libsqlite3-dev libzip-dev\
   && rm -rf /var/lib/apt/lists/*
 
 RUN ln -s ${PHP_DIR}/bin/php /usr/local/bin\
@@ -29,8 +29,8 @@ WORKDIR $PHP_SRC_DIR
 
 COPY sh/php_install.sh ..
 
-RUN apt update -qq\
-  && apt install -y autoconf build-essential bison re2c pkg-config git\
+RUN apt-get update -qq\
+  && apt-get install -y autoconf build-essential bison re2c pkg-config git\
   && sh ../php_install.sh\
   && rm -rf /var/lib/apt/lists/*
 
