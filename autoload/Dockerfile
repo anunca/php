@@ -7,7 +7,6 @@ RUN apt-get update -qq\
   && apt-get install -y --no-install-recommends libzip-dev\
   && docker-php-ext-install -j"$(nproc)" zip\
   && apt-get purge -y libzip-dev\
-  && apt-get autoremove -y\
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
