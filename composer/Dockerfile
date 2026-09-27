@@ -5,11 +5,13 @@ FROM $COMPOSER_IMAGE AS composer
 
 FROM $PHP_IMAGE AS base
 
-#base dependencies
-RUN apk add --no-cache libzip-dev
+#runtime dependencies
+RUN apk add --no-cache libzip
 
 #PHP extensions
-RUN docker-php-ext-install -j"$(nproc)" zip
+RUN apk add --no-cache --virtual .build-deps libzip-dev \
+  && docker-php-ext-install -j"$(nproc)" zip \
+  && apk del .build-deps
 
 WORKDIR /usr/share/nginx/html
 
