@@ -4,7 +4,7 @@ services:
       - app
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: Dockerfile.nginx
       args:
         NGINX_IMAGE:
     image: $WEB_IMAGE

@@ -9,7 +9,7 @@ FROM $PHP_IMAGE AS base
 RUN apk add --no-cache libzip-dev
 
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip pdo_mysql
+RUN docker-php-ext-install -j"$(nproc)" zip pdo_mysql
 
 WORKDIR /var/www/html
 

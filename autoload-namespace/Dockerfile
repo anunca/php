@@ -3,12 +3,12 @@ ARG PHP_IMAGE=php:8.5.10-apache
 FROM $PHP_IMAGE AS base
 
 #base dependencies
-RUN apt update -qq\
-  && apt install -y libzip-dev\
+RUN apt-get update -qq\
+  && apt-get install -y libzip-dev\
   && rm -rf /var/lib/apt/lists/*
   
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip
+RUN docker-php-ext-install -j"$(nproc)" zip
 
 WORKDIR /var/www/html
 

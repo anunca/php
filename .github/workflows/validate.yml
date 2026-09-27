@@ -28,9 +28,38 @@ jobs:
             echo "::endgroup::"
           done < <(find . -type f -name 'compose.dev.yml' -print | sort)
 
+  dockerfile-lint:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Lint Dockerfiles
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -d '' dockerfiles < <(
+            find . -type f \
+              \( -name 'Dockerfile' -o -name 'Dockerfile.*' \) \
+              -print0
+          )
+
+          printf 'Linting %d Dockerfiles\n' "${#dockerfiles[@]}"
+
+          if ((${#dockerfiles[@]} == 0)); then
+            echo "No Dockerfiles found"
+            exit 1
+          fi
+
+          docker run --rm \
+            -v "$PWD:/workspace" \
+            -w /workspace \
+            hadolint/hadolint:v2.15.1-alpine \
+            hadolint --config .hadolint.yaml "${dockerfiles[@]}"
+
   build:
     runs-on: ubuntu-26.04
-    needs: repository
+    needs: [repository, dockerfile-lint]
     strategy:
       fail-fast: false
       matrix:
@@ -80,7 +109,7 @@ jobs:
 
   build-compil:
     runs-on: ubuntu-26.04
-    needs: repository
+    needs: [repository, dockerfile-lint]
     steps:
       - uses: actions/checkout@v7
 
@@ -91,7 +120,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./compil
-          file: ./compil/Dockerfile.app.alpine
+          file: ./compil/Dockerfile.alpine
           target: dev
           push: false
           load: true
@@ -117,7 +146,7 @@ jobs:
 
   build-frankenphp:
     runs-on: ubuntu-26.04
-    needs: repository
+    needs: [repository, dockerfile-lint]
     steps:
       - uses: actions/checkout@v7
 

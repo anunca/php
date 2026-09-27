@@ -6,12 +6,12 @@ FROM $COMPOSER_IMAGE AS composer
 FROM $PHP_IMAGE AS base
 
 #base dependencies
-RUN apt update -qq\
-  && apt install -y libzip-dev\
+RUN apt-get update -qq\
+  && apt-get install -y libzip-dev\
   && rm -rf /var/lib/apt/lists/*
   
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip
+RUN docker-php-ext-install -j"$(nproc)" zip
 
 #redis
 RUN pecl install redis\
@@ -23,8 +23,8 @@ WORKDIR /var/www/html
 FROM base AS dev
 
 #Composer dependencies
-RUN apt update -qq\
-  && apt install -y git unzip\
+RUN apt-get update -qq\
+  && apt-get install -y git unzip\
   && rm -rf /var/lib/apt/lists/*
 
 #xdebug
