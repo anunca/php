@@ -47,8 +47,7 @@ jobs:
             -v "$PWD:/workspace" \
             -w /workspace \
             hadolint/hadolint:v2.15.1-alpine \
-            --config .hadolint.yaml \
-            "${dockerfiles[@]}"
+            hadolint --config .hadolint.yaml "${dockerfiles[@]}"
 
   build:
     runs-on: ubuntu-26.04
