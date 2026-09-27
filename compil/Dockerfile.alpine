@@ -5,7 +5,7 @@ FROM $OS_IMAGE AS base
 ARG PHP_DIR
 
 RUN apk add --no-cache\
-  libxml2-dev sqlite-dev libzip-dev
+  libxml2 sqlite-libs libzip
 
 RUN ln -s ${PHP_DIR}/bin/php /usr/local/bin\
   && ln -s ${PHP_DIR}/sbin/php-fpm /usr/local/bin
@@ -28,10 +28,11 @@ WORKDIR $PHP_SRC_DIR
 
 COPY sh/php_install.sh ..
 
-RUN apk add --no-cache --virtual .virtual\
+RUN apk add --no-cache --virtual .build-deps\
   autoconf build-base bison re2c linux-headers git\
+  libxml2-dev sqlite-dev libzip-dev\
   && sh ../php_install.sh\
-  && apk del .virtual
+  && apk del .build-deps
 
 RUN cp ${PHP_DIR}/etc/php-fpm.conf.default ${PHP_DIR}/etc/php-fpm.conf
 COPY ./etc/php-fpm.conf $PHP_INI_DIR-fpm.d/www.conf
