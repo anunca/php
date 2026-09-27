@@ -5,13 +5,15 @@ FROM $COMPOSER_IMAGE AS composer
 
 FROM $PHP_IMAGE AS base
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 #base dependencies
-RUN apt update -qq\
-  && apt install -y libzip-dev\
+RUN apt-get update -qq\
+  && apt-get install -y libzip-dev\
   && rm -rf /var/lib/apt/lists/*
 
 #PHP extensions
-RUN docker-php-ext-install -j$(nproc) zip
+RUN docker-php-ext-install -j"$(nproc)" zip
 
 #opcache
 COPY etc/php/opcache.ini $PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini
@@ -22,8 +24,8 @@ RUN pecl install redis\
   && docker-php-ext-enable redis
 
 #memcached
-RUN apt update -qq\
-  && apt install -y libmemcached-dev libssl-dev\
+RUN apt-get update -qq\
+  && apt-get install -y libmemcached-dev libssl-dev\
   && rm -rf /var/lib/apt/lists/*
 RUN yes '' | pecl install -f memcached\
   && rm -rf /tmp/pear\
@@ -36,8 +38,8 @@ WORKDIR /var/www/html
 FROM base AS base-builder
 
 #Composer dependencies
-RUN apt update -qq\
-  && apt install -y git unzip\
+RUN apt-get update -qq\
+  && apt-get install -y git unzip\
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
