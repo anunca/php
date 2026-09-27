@@ -5,10 +5,10 @@ FROM $PHP_IMAGE AS base
 ARG PHP_REDIS_VERSION=6.3.0
 
 #redis
-RUN apk add --no-cache --virtual .virtual autoconf build-base\
+RUN apk add --no-cache --virtual .build-deps autoconf build-base\
   && pecl install redis-$PHP_REDIS_VERSION\
   && docker-php-ext-enable redis\
-  && apk del .virtual
+  && apk del .build-deps
 
 COPY ./etc/php-fpm/www.conf $PHP_INI_DIR-fpm.d/zz-docker.conf
 
@@ -18,7 +18,7 @@ FROM base AS builder-dev
 
 #xdebug
 WORKDIR /tmp/xdebug
-RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
+RUN apk add --no-cache --virtual .build-deps autoconf build-base linux-headers\
   && wget -q https://xdebug.org/files/xdebug-3.5.3.tgz\
   && tar --strip-components=1 -xzf xdebug-3.5.3.tgz\
   && phpize\
@@ -26,7 +26,7 @@ RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
   && make\
   && make install\
   && docker-php-ext-enable xdebug\
-  && apk del .virtual\
+  && apk del .build-deps\
   && rm -rf /tmp/xdebug
 
 WORKDIR /var/www/html

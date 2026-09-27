@@ -5,11 +5,11 @@ FROM $COMPOSER_IMAGE AS composer
 
 FROM $PHP_IMAGE AS base
 
-#base dependencies
-RUN apk add --no-cache libzip-dev
-
-#PHP extensions
-RUN docker-php-ext-install -j"$(nproc)" zip pdo_mysql
+# Keep the runtime library, but remove build-only headers after compiling extensions
+RUN apk add --no-cache libzip\
+  && apk add --no-cache --virtual .build-deps libzip-dev\
+  && docker-php-ext-install -j"$(nproc)" zip pdo_mysql\
+  && apk del .build-deps
 
 WORKDIR /var/www/html
 
@@ -24,10 +24,10 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 FROM base-builder AS dev
 
 #xdebug
-RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
+RUN apk add --no-cache --virtual .build-deps autoconf build-base linux-headers\
   && pecl install xdebug\
   && docker-php-ext-enable xdebug\
-  && apk del .virtual
+  && apk del .build-deps
 COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 #opcache

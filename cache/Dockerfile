@@ -7,11 +7,10 @@ FROM $PHP_IMAGE AS base
 
 #base dependencies
 RUN apt-get update -qq\
-  && apt-get install -y libzip-dev\
+  && apt-get install -y --no-install-recommends libzip-dev\
+  && docker-php-ext-install -j"$(nproc)" zip\
+  && apt-get purge -y libzip-dev\
   && rm -rf /var/lib/apt/lists/*
-
-#PHP extensions
-RUN docker-php-ext-install -j"$(nproc)" zip
 
 #opcache
 COPY etc/php/opcache.ini $PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini
@@ -22,13 +21,13 @@ RUN pecl install redis\
   && docker-php-ext-enable redis
 
 #memcached
-RUN apt-get update -qq\
-  && apt-get install -y libmemcached-dev libssl-dev\
-  && rm -rf /var/lib/apt/lists/*
 # hadolint ignore=DL4006
-RUN yes '' | pecl install -f memcached\
-  && rm -rf /tmp/pear\
-  && docker-php-ext-enable memcached
+RUN apt-get update -qq\
+  && apt-get install -y --no-install-recommends libmemcached-dev libssl-dev\
+  && yes '' | pecl install -f memcached\
+  && docker-php-ext-enable memcached\
+  && apt-get purge -y libmemcached-dev libssl-dev\
+  && rm -rf /tmp/pear /var/lib/apt/lists/*
 
 RUN a2enmod rewrite
 

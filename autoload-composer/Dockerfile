@@ -7,11 +7,10 @@ FROM $PHP_IMAGE AS base
 
 #base dependencies
 RUN apt-get update -qq\
-  && apt-get install -y libzip-dev\
+  && apt-get install -y --no-install-recommends libzip-dev\
+  && docker-php-ext-install -j"$(nproc)" zip\
+  && apt-get purge -y libzip-dev\
   && rm -rf /var/lib/apt/lists/*
-  
-#PHP extensions
-RUN docker-php-ext-install -j"$(nproc)" zip
 
 WORKDIR /app
 
