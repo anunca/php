@@ -4,17 +4,18 @@ FROM $PHP_IMAGE AS base
 
 #php memcached
 # hadolint ignore=DL4006
-RUN apk --no-cache add autoconf g++ make zlib-dev libmemcached-dev libmemcached\
+RUN apk add --no-cache libmemcached\
+  && apk add --no-cache --virtual .build-deps autoconf g++ make zlib-dev libmemcached-dev\
   && yes '' | pecl install --force memcached\
   && docker-php-ext-enable memcached\
-  && apk del --purge autoconf g++ make zlib-dev libmemcached-dev
+  && apk del .build-deps
 
 #php redis
 # hadolint ignore=DL4006
-RUN apk --no-cache add autoconf g++ make\
+RUN apk add --no-cache --virtual .build-deps autoconf g++ make\
   && yes '' | pecl install --force redis\
   && docker-php-ext-enable redis\
-  && apk del --purge autoconf g++ make
+  && apk del .build-deps
 
 USER www-data:www-data
 
