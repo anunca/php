@@ -37,12 +37,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           mapfile -d '' dockerfiles < <(
             find . -type f \
-              \( -name 'Dockerfile' -o -name 'Dockerfile.*'\) \
+              \( -name 'Dockerfile' -o -name 'Dockerfile.*' \) \
               -print0
           )
+
           printf 'Linting %d Dockerfiles\n' "${#dockerfiles[@]}"
+
+          if ((${#dockerfiles[@]} == 0)); then
+            echo "No Dockerfiles found"
+            exit 1
+          fi
+
           docker run --rm \
             -v "$PWD:/workspace" \
             -w /workspace \
