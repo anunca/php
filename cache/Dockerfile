@@ -10,7 +10,6 @@ RUN apt-get update -qq\
   && apt-get install -y --no-install-recommends libzip-dev\
   && docker-php-ext-install -j"$(nproc)" zip\
   && apt-get purge -y libzip-dev\
-  && apt-get autoremove -y\
   && rm -rf /var/lib/apt/lists/*
 
 #opcache
@@ -28,7 +27,6 @@ RUN apt-get update -qq\
   && yes '' | pecl install -f memcached\
   && docker-php-ext-enable memcached\
   && apt-get purge -y libmemcached-dev libssl-dev\
-  && apt-get autoremove -y\
   && rm -rf /tmp/pear /var/lib/apt/lists/*
 
 RUN a2enmod rewrite
