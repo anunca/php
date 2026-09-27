@@ -120,7 +120,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./compil
-          file: ./compil/Dockerfile.app.alpine
+          file: ./compil/Dockerfile.alpine
           target: dev
           push: false
           load: true
