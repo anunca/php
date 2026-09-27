@@ -1,8 +1,8 @@
 services:
   web:
     build:
-      context: ./docker
-      dockerfile: httpd.Dockerfile
+      context: .
+      dockerfile: Dockerfile.httpd
       args:
         HTTPD_IMAGE:
     image: test/session-httpd
@@ -16,7 +16,8 @@ services:
       - ./src:/app
   app:
     build:
-      context: ./docker
+      context: .
+      dockerfile: Dockerfile.php-fpm
       args:
         PHP_IMAGE:
     image: $APP_IMAGE

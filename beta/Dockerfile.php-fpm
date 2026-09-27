@@ -25,9 +25,9 @@ RUN apk add --no-cache --virtual .virtual autoconf build-base linux-headers\
   && ./configure --enable-xdebug\
   && make\
   && make install\
-  && rm xdebug-3.5.3.tgz\
   && docker-php-ext-enable xdebug\
-  && apk del .virtual
+  && apk del .virtual\
+  && rm -rf /tmp/xdebug
 
 WORKDIR /var/www/html
 FROM builder-dev AS dev
