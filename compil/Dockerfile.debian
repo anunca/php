@@ -1,4 +1,4 @@
-ARG OS_IMAGE=debian:buster-slim
+ARG OS_IMAGE=debian:bookworm-slim
 
 FROM $OS_IMAGE AS base
 
