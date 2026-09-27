@@ -5,8 +5,6 @@ FROM $COMPOSER_IMAGE AS composer
 
 FROM $PHP_IMAGE AS base
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 #base dependencies
 RUN apt-get update -qq\
   && apt-get install -y libzip-dev\
@@ -27,6 +25,7 @@ RUN pecl install redis\
 RUN apt-get update -qq\
   && apt-get install -y libmemcached-dev libssl-dev\
   && rm -rf /var/lib/apt/lists/*
+# hadolint ignore=DL4006
 RUN yes '' | pecl install -f memcached\
   && rm -rf /tmp/pear\
   && docker-php-ext-enable memcached
