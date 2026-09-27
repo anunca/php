@@ -52,5 +52,5 @@ smoke: ## Verify HTTP application readiness
 		sleep 2; \
 	done; \
 	$(MAKE) ps; \
-	$(MAKE) logs || true; \
+	$(dc) logs --no-color || true; \
 	exit 1
