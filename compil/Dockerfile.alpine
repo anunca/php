@@ -5,7 +5,7 @@ FROM $OS_IMAGE AS base
 ARG PHP_DIR
 
 RUN apk add --no-cache\
-  libxml2 sqlite-libs libzip
+  libgcc libxml2 sqlite-libs libzip
 
 RUN ln -s ${PHP_DIR}/bin/php /usr/local/bin\
   && ln -s ${PHP_DIR}/sbin/php-fpm /usr/local/bin
