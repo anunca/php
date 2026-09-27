@@ -2,6 +2,8 @@ ARG PHP_IMAGE=php:8.5.10-fpm-alpine
 
 FROM $PHP_IMAGE AS base
 
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
 #php memcached
 RUN apk --no-cache add autoconf g++ make zlib-dev libmemcached-dev libmemcached\
   && yes '' | pecl install --force memcached\
