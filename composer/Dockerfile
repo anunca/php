@@ -5,12 +5,10 @@ FROM $COMPOSER_IMAGE AS composer
 
 FROM $PHP_IMAGE AS base
 
-#runtime dependencies
-RUN apk add --no-cache libzip
-
-#PHP extensions
-RUN apk add --no-cache --virtual .build-deps libzip-dev \
-  && docker-php-ext-install -j"$(nproc)" zip \
+# Keep the runtime library, but remove build-only headers after compiling extensions
+RUN apk add --no-cache libzip\
+  && apk add --no-cache --virtual .build-deps libzip-dev\
+  && docker-php-ext-install -j"$(nproc)" zip\
   && apk del .build-deps
 
 WORKDIR /usr/share/nginx/html
