@@ -43,8 +43,18 @@ s/memory_limit =.*/memory_limit = 128M/;\
 FROM base-builder AS build-prod
 
 COPY src/composer.json src/composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
+# Cache dependency downloads independently of application source changes.
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install \
+        --no-dev \
+        --no-interaction \
+        --no-progress \
+        --prefer-dist \
+        --no-autoloader \
+        --no-scripts
 COPY src .
+# Include application classes in the optimized production autoloader.
+RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
 

@@ -53,8 +53,10 @@ RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 FROM base-builder AS builder-prod
 
 COPY src/composer.json src/composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
 COPY src .
+# Generate the optimized autoloader after application classes are available.
+RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
 

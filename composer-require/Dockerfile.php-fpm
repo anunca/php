@@ -39,8 +39,11 @@ RUN --mount=type=secret,id=github_token \
         --no-interaction \
         --no-progress \
         --prefer-dist \
-        --optimize-autoloader
+        --no-autoloader \
+        --no-scripts
 COPY src .
+# Generate the optimized autoloader after application classes are available.
+RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
 
