@@ -18,7 +18,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 FROM base-builder AS dev
 
 COPY src/composer.json src/composer.lock ./
-RUN --mount=type=secret,id=github_token \
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    --mount=type=secret,id=github_token \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache \
     COMPOSER_AUTH="{\"github-oauth\":{\"github.com\":\"$(cat /run/secrets/github_token)\"}}" \
     composer install \
         --no-interaction \
@@ -32,7 +34,9 @@ RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
-RUN --mount=type=secret,id=github_token \
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    --mount=type=secret,id=github_token \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache \
     COMPOSER_AUTH="{\"github-oauth\":{\"github.com\":\"$(cat /run/secrets/github_token)\"}}" \
     composer install \
         --no-dev \

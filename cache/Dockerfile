@@ -58,13 +58,15 @@ RUN pecl install xdebug\
 COPY etc/php/xdebug/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 COPY src/composer.json src/composer.lock ./
-RUN composer install
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
 FROM base-builder AS build-prod
 
 COPY src/composer.json src/composer.lock ./
-RUN composer install \
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install \
         --no-dev \
         --no-interaction \
         --no-progress \

@@ -38,7 +38,8 @@ ARG APP_ENV
 ARG APP_DEBUG
 
 COPY src/composer.json src/composer.lock ./
-RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
 COPY src .
 # Generate the optimized autoloader after application classes are available.
 RUN composer dump-autoload --no-dev --optimize --no-interaction

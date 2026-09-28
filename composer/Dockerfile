@@ -24,7 +24,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 FROM base-builder AS dev
 
 COPY src/composer.json src/composer.lock ./
-RUN --mount=type=secret,id=github_token \
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    --mount=type=secret,id=github_token \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache \
     COMPOSER_AUTH="{\"github-oauth\":{\"github.com\":\"$(cat /run/secrets/github_token)\"}}" \
     composer install \
         --no-interaction \
@@ -44,7 +46,9 @@ s/memory_limit =.*/memory_limit = 128M/;\
 FROM base-builder AS build-prod
 
 COPY src/composer.json src/composer.lock ./
-RUN --mount=type=secret,id=github_token \
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    --mount=type=secret,id=github_token \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache \
     COMPOSER_AUTH="{\"github-oauth\":{\"github.com\":\"$(cat /run/secrets/github_token)\"}}" \
     composer install \
         --no-dev \

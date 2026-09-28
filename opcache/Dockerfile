@@ -25,7 +25,8 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY src/composer.json src/composer.lock ./
-RUN composer install
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
 RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
@@ -42,7 +43,8 @@ ARG APP_ENV
 ARG APP_DEBUG
 
 COPY src/composer.json src/composer.lock ./
-RUN composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
 COPY src .
 # Generate the optimized autoloader after application classes are available.
 RUN composer dump-autoload --no-dev --optimize --no-interaction
