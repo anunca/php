@@ -1,9 +1,15 @@
 services:
   app1:
+    depends_on:
+      - app
     build:
       target: dev
     volumes:
-      - php_vendor:/var/www/html/vendor
+      - type: volume
+        source: php_vendor
+        target: /var/www/html/vendor
+        volume:
+          nocopy: true
       - ./src:/var/www/html
       - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
       - ./etc/php/xdebug/xdebuginfo.php:/var/www/html/public/xdebuginfo.php
@@ -11,10 +17,16 @@ services:
     environment:
       - XDEBUG_MODE
   app2:
+    depends_on:
+      - app
     build:
       target: dev
     volumes:
-      - php_vendor:/var/www/html/vendor
+      - type: volume
+        source: php_vendor
+        target: /var/www/html/vendor
+        volume:
+          nocopy: true
       - ./src:/var/www/html
       - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
       - ./etc/php/xdebug/xdebuginfo.php:/var/www/html/public/xdebuginfo.php
@@ -22,10 +34,16 @@ services:
     environment:
       - XDEBUG_MODE
   app3:
+    depends_on:
+      - app
     build:
       target: dev
     volumes:
-      - php_vendor:/var/www/html/vendor
+      - type: volume
+        source: php_vendor
+        target: /var/www/html/vendor
+        volume:
+          nocopy: true
       - ./src:/var/www/html
       - ./etc/php/phpinfo.php:/var/www/html/public/phpinfo.php
       - ./etc/php/xdebug/xdebuginfo.php:/var/www/html/public/xdebuginfo.php
