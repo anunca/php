@@ -14,7 +14,10 @@ RUN apt-get update -qq\
  
 WORKDIR /var/www/html
 
-FROM base AS dev
+ARG APP_ENV
+ARG APP_DEBUG
+
+FROM base AS base-builder
 
 #Composer dependencies
 RUN apt-get update -qq\
@@ -24,6 +27,8 @@ RUN apt-get update -qq\
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+FROM base-builder AS dev
+
 RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
 && sed -i '\
 s/;opcache.enable=.*/opcache.enable=1/;\
@@ -32,10 +37,12 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
-FROM dev AS build
+COPY src/composer.json src/composer.lock ./
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
+COPY src .
 
-ARG APP_ENV
-ARG APP_DEBUG
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -45,8 +52,6 @@ COPY src .
 RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
- 
-COPY --from=build /var/www/html .
 
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini\
 && sed -i '\
@@ -65,3 +70,5 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors =.*/display_errors = Off/;\
 ' $PHP_INI_DIR/php.ini
+
+COPY --from=prod-builder /var/www/html .

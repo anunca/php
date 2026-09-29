@@ -89,3 +89,8 @@ smoke: ## Verify HTTP application readiness
 	$(MAKE) ps; \
 	$(dc) logs --no-color || true; \
 	exit 1
+
+.PHONY: diagnostics
+diagnostics: ## Show container status and recent logs without following
+	$(dc) ps -a
+	$(dc) logs --no-color --tail=200

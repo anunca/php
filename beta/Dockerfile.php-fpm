@@ -14,7 +14,7 @@ COPY ./etc/php-fpm/www.conf $PHP_INI_DIR-fpm.d/zz-docker.conf
 
 WORKDIR /var/www/html
 
-FROM base AS builder-dev
+FROM base AS base-builder
 
 #xdebug
 WORKDIR /tmp/xdebug
@@ -29,17 +29,14 @@ RUN apk add --no-cache --virtual .build-deps autoconf build-base linux-headers\
   && apk del .build-deps\
   && rm -rf /tmp/xdebug
 
-WORKDIR /var/www/html
-FROM builder-dev AS dev
-
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-
-FROM base AS builder-prod
+FROM base-builder AS dev
 
 COPY ./src /var/www/html
 
-FROM builder-prod AS prod
+RUN cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+FROM base AS prod
 
-COPY --from=builder-prod /var/www/html .
+COPY ./src /var/www/html
+
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"

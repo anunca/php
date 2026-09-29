@@ -1,4 +1,6 @@
 {
     "name": "demo/opcache",
-    "require": {}
+    "require": {
+        "rlerdorf/opcache-status": "dev-master"
+    }
 }

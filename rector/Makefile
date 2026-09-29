@@ -45,6 +45,19 @@ ps: ## List containers
 clean: ## Remove containers and volumes
 	$(dc) down -t0 --volumes --remove-orphans
 
+##@ Composer
+composer.install ci: ## Run composer install
+	$(dc) run --rm app composer install
+
+composer.fund cf: ## Run composer fund
+	$(dc) run --rm app composer fund
+
+composer.update cu: ## Run composer update
+	$(dc) run --rm app composer update
+
+composer.remove cr: ## Remove vendor directory
+	$(dc) run --rm app rm -rf vendor
+
 ##@ Test
 smoke: ## Verify HTTP application readiness
 	@for attempt in $$(seq 1 30); do \
@@ -54,3 +67,8 @@ smoke: ## Verify HTTP application readiness
 	$(MAKE) ps; \
 	$(dc) logs --no-color || true; \
 	exit 1
+
+.PHONY: diagnostics
+diagnostics: ## Show container status and recent logs without following
+	$(dc) ps -a
+	$(dc) logs --no-color --tail=200

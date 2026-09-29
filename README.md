@@ -35,3 +35,15 @@ Hands-on PHP examples covering runtime features, dependency management, framewor
 - GNU Make
 
 Each lab has its own README and Makefile. Run `make help` inside a lab to see its commands.
+
+## Validation
+
+CI builds both development and production configurations for labs that provide them.
+EFK and Session only provide development configurations. Compil validates its Alpine
+production target, and FrankenPHP validates its production target separately.
+HTTP smoke tests currently run against development configurations; production
+coverage checks image builds, not full application readiness.
+
+Run `make ENV=prod build` inside a lab to check its production build locally.
+If startup fails, `make diagnostics` prints container status and the last 200 log
+lines without following logs. CI runs this command before cleanup on failure.

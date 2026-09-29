@@ -4,15 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5eb2f12be15edf79f3547947b299a8fe",
-    "packages": [],
+    "content-hash": "967f89425e8897a94c223359a1cec979",
+    "packages": [
+        {
+            "name": "rlerdorf/opcache-status",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rlerdorf/opcache-status.git",
+                "reference": "b000fd4c5402aba47bfcc0df15922abef7d0e4f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rlerdorf/opcache-status/zipball/b000fd4c5402aba47bfcc0df15922abef7d0e4f7",
+                "reference": "b000fd4c5402aba47bfcc0df15922abef7d0e4f7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "PHP-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "The contributors",
+                    "homepage": "https://github.com/rlerdorf/opcache-status/graphs/contributors"
+                }
+            ],
+            "description": "A one-page opcache status page",
+            "support": {
+                "issues": "https://github.com/rlerdorf/opcache-status/issues",
+                "source": "https://github.com/rlerdorf/opcache-status/tree/master"
+            },
+            "time": "2026-03-09T17:18:18+00:00"
+        }
+    ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "rlerdorf/opcache-status": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

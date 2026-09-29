@@ -15,10 +15,3 @@ prod
 ```sh
 export ENV=prod
 ```
-get opcache script
-```sh
-wget https://raw.github.com/rlerdorf/opcache-status/master/opcache.php
-```
-```sh
-curl https://raw.github.com/rlerdorf/opcache-status/master/opcache.php --output opcache.php -L
-```

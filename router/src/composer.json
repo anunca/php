@@ -2,6 +2,6 @@
     "name": "demo/router",
     "type": "project",
     "require-dev": {
-        "symfony/var-dumper": "^5.2"
+        "symfony/var-dumper": "8.1.7"
     }
 }

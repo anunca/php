@@ -23,6 +23,15 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 FROM base-builder AS dev
 
+#php ini
+RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
+&& sed -i '\
+s/;opcache.enable=.*/opcache.enable=1/;\
+s/;opcache.enable_cli=.*/opcache.enable_cli=1/;\
+s|;date.timezone =.*|date.timezone = Europe/Paris|;\
+s/memory_limit =.*/memory_limit = 128M/;\
+' $PHP_INI_DIR/php.ini
+
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
     --mount=type=secret,id=github_token \
@@ -34,16 +43,7 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
         --prefer-dist
 COPY src .
 
-#php ini
-RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
-&& sed -i '\
-s/;opcache.enable=.*/opcache.enable=1/;\
-s/;opcache.enable_cli=.*/opcache.enable_cli=1/;\
-s|;date.timezone =.*|date.timezone = Europe/Paris|;\
-s/memory_limit =.*/memory_limit = 128M/;\
-' $PHP_INI_DIR/php.ini
-
-FROM base-builder AS build-prod
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -66,4 +66,4 @@ FROM base AS prod
 #php ini
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
-COPY --from=build-prod /usr/share/nginx/html .
+COPY --from=prod-builder /usr/share/nginx/html .

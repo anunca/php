@@ -1,6 +1,6 @@
 {
     "require": {
-        "doctrine/orm": "^2.8.x-dev"
+        "doctrine/orm": "3.7.2"
     },
     "autoload": {
         "psr-4": {

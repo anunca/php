@@ -1,4 +1,5 @@
 .env*
 !.env.local
 
+/src/var
 /src/vendor

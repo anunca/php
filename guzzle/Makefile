@@ -47,13 +47,13 @@ clean: ## Remove containers and volumes
 
 ##@ Composer
 composer.install ci: ## Run composer install
-	$(dc) run --rm app composer install
+	$(dc) run --rm -e XDEBUG_MODE=off app composer install
 
 composer.fund cf: ## Run composer fund
-	$(dc) run --rm app composer fund
+	$(dc) run --rm -e XDEBUG_MODE=off app composer fund
 
 composer.update cu: ## Run composer update
-	$(dc) run --rm app composer update
+	$(dc) run --rm -e XDEBUG_MODE=off app composer update
 
 composer.remove cr: ## Remove vendor directory
 	$(dc) run --rm app rm -rf vendor
@@ -67,3 +67,8 @@ smoke: ## Verify HTTP application readiness
 	$(MAKE) ps; \
 	$(dc) logs --no-color || true; \
 	exit 1
+
+.PHONY: diagnostics
+diagnostics: ## Show container status and recent logs without following
+	$(dc) ps -a
+	$(dc) logs --no-color --tail=200
