@@ -25,6 +25,9 @@ jobs:
             echo "::group::$file"
             dir="$(dirname "$file")"
             make -C "$dir" config
+            if [[ -f "$dir/compose.prod.yml" ]]; then
+              make -C "$dir" ENV=prod config
+            fi
             echo "::endgroup::"
           done < <(find . -type f -name 'compose.dev.yml' -print | sort)
 
@@ -63,6 +66,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        environment: [dev, prod]
+        exclude:
+          # These labs only define a development Compose project.
+          - project: efk
+            environment: prod
+          - project: session
+            environment: prod
         project:
           - amp
           - auto-prepend-file
@@ -86,6 +96,8 @@ jobs:
           - session
           - twig
           - xdebug
+    env:
+      ENV: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v7
 
@@ -98,10 +110,16 @@ jobs:
         run: make -C "${{ matrix.project }}" build
 
       - name: Start ${{ matrix.project }}
+        if: matrix.environment == 'dev'
         run: make -C "${{ matrix.project }}" start
 
       - name: Smoke test ${{ matrix.project }}
+        if: matrix.environment == 'dev'
         run: make -C "${{ matrix.project }}" smoke
+
+      - name: Show container diagnostics on failure
+        if: failure()
+        run: make -C "${{ matrix.project }}" diagnostics
 
       - name: Clean up
         if: always()
@@ -134,11 +152,33 @@ jobs:
           cache-from: type=gha,scope=compil
           cache-to: type=gha,scope=compil,mode=max
 
+      - name: Build compil production image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./compil
+          file: ./compil/Dockerfile.alpine
+          target: prod
+          push: false
+          load: false
+          tags: registry.app.internal/compil-app:prod
+          build-args: |
+            OS_IMAGE=alpine:3.23.4
+            PHP_VERSION_NUMBER=8.5.10
+            PHP_SRC_DIR=/usr/local/src/php
+            PHP_DIR=/usr/local/php
+            PHP_INI_DIR=/usr/local/php/etc/php
+          cache-from: type=gha,scope=compil
+          cache-to: type=gha,scope=compil,mode=max
+
       - name: Start compil app
         run: make -C compil start
 
       - name: Smoke test compil app
         run: make -C compil smoke
+
+      - name: Show container diagnostics on failure
+        if: failure()
+        run: make -C "compil" diagnostics
 
       - name: Clean up
         if: always()
@@ -169,11 +209,31 @@ jobs:
           cache-from: type=gha,scope=frankenphp
           cache-to: type=gha,scope=frankenphp,mode=max
 
+      - name: Build FrankenPHP production image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./frankenphp
+          file: ./frankenphp/Dockerfile
+          target: prod
+          push: false
+          load: false
+          tags: demo/frankenphp:prod
+          build-args: |
+            COMPOSER_IMAGE=composer:2.10.2
+            FRANKENPHP_BUILDER_IMAGE=dunglas/frankenphp:1.12.7-builder-php8.5.10-alpine
+            FRANKENPHP_IMAGE=dunglas/frankenphp:1.12.7-php8.5.10-alpine
+          cache-from: type=gha,scope=frankenphp
+          cache-to: type=gha,scope=frankenphp,mode=max
+
       - name: Start frankenphp app
         run: make -C frankenphp start
 
       - name: Smoke test frankenphp app
         run: make -C frankenphp smoke
+
+      - name: Show container diagnostics on failure
+        if: failure()
+        run: make -C "frankenphp" diagnostics
 
       - name: Clean up
         if: always()

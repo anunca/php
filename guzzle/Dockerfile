@@ -19,27 +19,29 @@ RUN pecl install redis\
 
 WORKDIR /var/www/html
 
-FROM base AS dev
+FROM base AS base-builder
 
 #Composer dependencies
 RUN apt-get update -qq\
   && apt-get install -y git unzip\
   && rm -rf /var/lib/apt/lists/*
 
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+FROM base-builder AS dev
+
 #xdebug
 RUN pecl install xdebug\
   && docker-php-ext-enable xdebug
 COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
-
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
     COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
-FROM dev AS build
+FROM base-builder AS build
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -50,4 +52,4 @@ RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
 
-COPY --from=build /app .
+COPY --from=build /var/www/html .

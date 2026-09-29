@@ -13,7 +13,7 @@ RUN apk add --no-cache libzip\
 
 WORKDIR /var/www/html
 
-FROM base AS dev
+FROM base AS base-builder
 
 #Composer dependencies
 RUN apk add --no-cache unzip git
@@ -21,12 +21,14 @@ RUN apk add --no-cache unzip git
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+FROM base-builder AS dev
+
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
     COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
-FROM dev AS build
+FROM base-builder AS build
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \

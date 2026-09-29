@@ -15,7 +15,7 @@ FROM base AS dev
 
 COPY src .
 
-FROM dev AS build
+FROM base AS build
 
 COPY src .
 

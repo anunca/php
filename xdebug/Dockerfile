@@ -14,17 +14,22 @@ RUN apt-get update -qq\
 
 WORKDIR /var/www/html
 
-FROM base AS dev
-
-#xdebug
-RUN pecl install xdebug\
-  && docker-php-ext-enable xdebug
-COPY etc/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
+FROM base AS base-builder
 
 #Composer dependencies
 RUN apt-get update -qq\
   && apt-get install -y git unzip\
   && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+FROM base-builder AS dev
+
+#xdebug
+RUN pecl install xdebug\
+  && docker-php-ext-enable xdebug
+COPY etc/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
 
 RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
 && sed -i '\
@@ -34,15 +39,12 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
     COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
-FROM dev AS build
+FROM base-builder AS build
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \

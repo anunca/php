@@ -14,10 +14,12 @@ RUN apt-get update -qq\
 
 WORKDIR /app
 
-FROM base AS dev
+FROM base AS base-builder
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
+
+FROM base-builder AS dev
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -32,7 +34,7 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
-FROM base AS prod
+FROM base-builder AS build
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -40,5 +42,9 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
 COPY src .
 # Generate the optimized autoloader after application classes are available.
 RUN composer dump-autoload --no-dev --optimize --no-interaction
+
+FROM base AS prod
+
+COPY --from=build /app .
 
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini

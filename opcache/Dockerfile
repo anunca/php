@@ -14,7 +14,7 @@ RUN apt-get update -qq\
  
 WORKDIR /var/www/html
 
-FROM base AS dev
+FROM base AS base-builder
 
 #Composer dependencies
 RUN apt-get update -qq\
@@ -23,6 +23,8 @@ RUN apt-get update -qq\
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
+
+FROM base-builder AS dev
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -37,7 +39,7 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
-FROM dev AS build
+FROM base-builder AS build
 
 ARG APP_ENV
 ARG APP_DEBUG

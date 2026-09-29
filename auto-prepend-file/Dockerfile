@@ -18,7 +18,7 @@ s/memory_limit =.*/memory_limit = 128M/;\
 
 CMD [ "php-fpm" ]
 
-FROM dev AS build
+FROM base AS build
 
 COPY src .
 
@@ -26,7 +26,7 @@ FROM base AS prod
 
 COPY --from=build /var/www/html .
 
-RUN chown -R nobody:nogroup var
+RUN mkdir -p var && chown -R nobody:nogroup var
 
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini\
 && sed -i '\
