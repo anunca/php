@@ -50,13 +50,13 @@ db.ct: ## DB import
 
 ##@ Composer
 composer.install ci: ## Run composer install
-	$(dc) run --rm app composer install
+	$(dc) run --rm -e XDEBUG_MODE=off app composer install
 
 composer.fund cf: ## Run composer fund
-	$(dc) run --rm app composer fund
+	$(dc) run --rm -e XDEBUG_MODE=off app composer fund
 
 composer.update cu: ## Run composer update
-	$(dc) run --rm app composer update
+	$(dc) run --rm -e XDEBUG_MODE=off app composer update
 
 composer.remove cr: ## Remove vendor directory
 	$(dc) run --rm app rm -rf vendor

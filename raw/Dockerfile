@@ -40,18 +40,23 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
-FROM base-builder AS build-prod
+COPY src/composer.json src/composer.lock ./
+RUN --mount=type=cache,target=/tmp/composer-cache \
+  XDEBUG_MODE=off  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
+COPY src .
+
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 # Cache dependency downloads independently of application source changes.
 RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install \
-        --no-dev \
-        --no-interaction \
-        --no-progress \
-        --prefer-dist \
-        --no-autoloader \
-        --no-scripts
+  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --prefer-dist \
+    --no-autoloader \
+    --no-scripts
 COPY src .
 # Include application classes in the optimized production autoloader.
 RUN composer dump-autoload --no-dev --optimize --no-interaction
@@ -71,4 +76,4 @@ s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors =.*/display_errors = Off/;\
 ' $PHP_INI_DIR/php.ini
 
-COPY --from=build-prod /var/www/html .
+COPY --from=prod-builder /var/www/html .

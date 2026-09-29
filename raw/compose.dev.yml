@@ -7,6 +7,9 @@ services:
     build:
       target: dev
     volumes:
+      - php_vendor:/var/www/html/vendor
       - ./src:/var/www/html
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
+volumes:
+  php_vendor:
+# extra_hosts:
+#   - "host.docker.internal:host-gateway"

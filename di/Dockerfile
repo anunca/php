@@ -34,20 +34,20 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 FROM base-builder AS dev
 
 #xdebug
-# RUN pecl install xdebug\
-#   && docker-php-ext-enable xdebug
-# COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+RUN pecl install xdebug\
+  && docker-php-ext-enable xdebug
+COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
+  XDEBUG_MODE=off  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
 FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
+  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
 COPY src .
 # Generate the optimized autoloader after application classes are available.
 RUN composer dump-autoload --no-dev --optimize --no-interaction

@@ -38,18 +38,18 @@ COPY etc/php/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
+  XDEBUG_MODE=off  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
-FROM base-builder AS build
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
+  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
 COPY src .
 # Generate the optimized autoloader after application classes are available.
 RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
 
-COPY --from=build /var/www/html .
+COPY --from=prod-builder /var/www/html .

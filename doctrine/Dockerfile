@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
     COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
-FROM base-builder AS build
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -39,4 +39,4 @@ RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
 
-COPY --from=build /var/www/html .
+COPY --from=prod-builder /var/www/html .

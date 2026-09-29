@@ -15,10 +15,6 @@ FROM base AS dev
 
 COPY src .
 
-FROM base AS build
-
-COPY src .
-
 FROM base AS prod
 
-COPY --from=build /var/www/html .
+COPY src .

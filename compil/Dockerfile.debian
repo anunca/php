@@ -18,7 +18,7 @@ WORKDIR $PHP_DIR
 
 CMD [ "sh", "/usr/local/bin/wrapper_script.sh" ]
 
-FROM base AS build
+FROM base AS base-builder
 
 ARG PHP_SRC_DIR
 ARG PHP_VERSION_NUMBER
@@ -48,8 +48,10 @@ ARG PHP_DIR
 ARG PHP_SRC_DIR
 ARG PHP_INI_DIR
 
-COPY --from=build ${PHP_DIR} ${PHP_DIR}
-COPY --from=build ${PHP_SRC_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
+COPY --from=base-builder ${PHP_DIR} ${PHP_DIR}
+COPY --from=base-builder ${PHP_SRC_DIR}/php.ini-development ${PHP_INI_DIR}/php.ini
+
+COPY ./src /var/www/html
 
 FROM base AS prod
 
@@ -57,7 +59,7 @@ ARG PHP_DIR
 ARG PHP_SRC_DIR
 ARG PHP_INI_DIR
 
-COPY --from=build ${PHP_DIR} ${PHP_DIR}
-COPY --from=build ${PHP_SRC_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
+COPY --from=base-builder ${PHP_DIR} ${PHP_DIR}
+COPY --from=base-builder ${PHP_SRC_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 COPY ./src /var/www/html

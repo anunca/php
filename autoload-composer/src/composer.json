@@ -2,7 +2,7 @@
     "name": "demo/app",
     "type": "project",
     "require": {
-        "guzzlehttp/guzzle": "^7.3"
+        "guzzlehttp/guzzle": "8.2.0"
     },
     "authors": [
         {

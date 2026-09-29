@@ -5,7 +5,7 @@ ARG FRANKENPHP_IMAGE=dunglas/frankenphp:1.12.7-php8.5.10-alpine
 FROM $COMPOSER_IMAGE AS composer
 
 #frankenphp builder
-FROM $FRANKENPHP_BUILDER_IMAGE AS builder
+FROM $FRANKENPHP_BUILDER_IMAGE AS frankenphp-builder
 
 COPY --from=caddy:builder /usr/bin/xcaddy /usr/bin/xcaddy
 
@@ -28,7 +28,7 @@ RUN CGO_ENABLED=1 \
 
 FROM $FRANKENPHP_IMAGE AS base
 
-COPY --from=builder /usr/local/bin/frankenphp /usr/local/bin/frankenphp
+COPY --from=frankenphp-builder /usr/local/bin/frankenphp /usr/local/bin/frankenphp
 
 #php extensions
 RUN install-php-extensions\
@@ -38,20 +38,23 @@ WORKDIR /app
 
 FROM base AS base-builder
 
+#Composer dependencies
+RUN apk add --no-cache unzip git
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 FROM base-builder AS dev
+
+#php conf
+RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
     COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
-#php conf
-RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
-
-FROM base-builder AS builder-prod
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -80,7 +83,7 @@ opcache.validate_timestamps=0
 opcache.jit_buffer_size=100M
 EOF
 
-COPY --from=builder-prod --chown=www-data:www-data /app .
+COPY --from=prod-builder --chown=www-data:www-data /app .
 
 # TODO check why i cannot use another user than root
 # USER www-data

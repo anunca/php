@@ -14,6 +14,9 @@ RUN apt-get update -qq\
  
 WORKDIR /var/www/html
 
+ARG APP_ENV
+ARG APP_DEBUG
+
 FROM base AS base-builder
 
 #Composer dependencies
@@ -26,11 +29,6 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 FROM base-builder AS dev
 
-COPY src/composer.json src/composer.lock ./
-RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
-COPY src .
-
 RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini\
 && sed -i '\
 s/;opcache.enable=.*/opcache.enable=1/;\
@@ -39,10 +37,12 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini
 
-FROM base-builder AS build
+COPY src/composer.json src/composer.lock ./
+RUN --mount=type=cache,target=/tmp/composer-cache \
+    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
+COPY src .
 
-ARG APP_ENV
-ARG APP_DEBUG
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
@@ -53,8 +53,6 @@ RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
  
-COPY --from=build /var/www/html .
-
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini\
 && sed -i '\
 s/;opcache.enable=.*/opcache.enable=1/;\
@@ -63,8 +61,6 @@ s/;opcache.memory_consumption=.*/opcache.memory_consumption=256/;\
 s/;opcache.max_accelerated_files=.*/opcache.max_accelerated_files=20000/;\
 s/;opcache.validate_timestamps=.*/opcache.validate_timestamps=0/;\
 s/;opcache.interned_strings_buffer=.*/opcache.interned_strings_buffer=16/;\
-s|;opcache.preload=.*|opcache.preload=/var/www/html/vendor/preload.php|;\
-s/;opcache.preload_user=.*/opcache.preload_user=www-data/;\
 ' $PHP_INI_DIR/php.ini\
 && echo 'opcache.jit_buffer_size=100M' >> $PHP_INI_DIR/php.ini\
 && sed -i '\
@@ -74,3 +70,5 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors =.*/display_errors = Off/;\
 ' $PHP_INI_DIR/php.ini
+
+COPY --from=prod-builder /var/www/html .

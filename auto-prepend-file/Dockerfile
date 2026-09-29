@@ -14,19 +14,11 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 ' $PHP_INI_DIR/php.ini\
 && echo 'error_log = /dev/stderr' >> $PHP_INI_DIR/php.ini\
-&& echo "auto_prepend_file = $PHP_INI_DIR/auto_prepend_file.php" >> $PHP_INI_DIR/php.ini\
-
-CMD [ "php-fpm" ]
-
-FROM base AS build
+&& echo "auto_prepend_file = $PHP_INI_DIR/auto_prepend_file.php" >> $PHP_INI_DIR/php.ini
 
 COPY src .
 
 FROM base AS prod
-
-COPY --from=build /var/www/html .
-
-RUN mkdir -p var && chown -R nobody:nogroup var
 
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini\
 && sed -i '\
@@ -47,3 +39,5 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors =.*/display_errors = Off/;\
 ' $PHP_INI_DIR/php.ini
+
+COPY src .

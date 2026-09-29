@@ -41,21 +41,19 @@ s/memory_limit =.*/memory_limit = 128M/;\
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
+  XDEBUG_MODE=off  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install
 COPY src .
 
-FROM base-builder AS build
+FROM base-builder AS prod-builder
 
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
-    COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
+  COMPOSER_CACHE_DIR=/tmp/composer-cache composer install --no-dev --no-interaction --no-progress --prefer-dist --no-autoloader --no-scripts
 COPY src .
 # Generate the optimized autoloader after application classes are available.
 RUN composer dump-autoload --no-dev --optimize --no-interaction
 
 FROM base AS prod
-
-COPY --from=build /var/www/html .
 
 RUN cp $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini\
 && sed -i '\
@@ -74,3 +72,5 @@ s|;date.timezone =.*|date.timezone = Europe/Paris|;\
 s/memory_limit =.*/memory_limit = 128M/;\
 s/display_errors =.*/display_errors = Off/;\
 ' $PHP_INI_DIR/php.ini
+
+COPY --from=prod-builder /var/www/html .

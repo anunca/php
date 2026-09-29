@@ -47,31 +47,31 @@ clean: ## Remove containers and volumes
 
 ##@ Composer
 composer.install ci: ## Run composer install
-	$(dc) run --rm app composer install
+	$(dc) run --rm -e XDEBUG_MODE=off app composer install
 
 composer.fund cf: ## Run composer fund
-	$(dc) run --rm app composer fund
+	$(dc) run --rm -e XDEBUG_MODE=off app composer fund
 
 composer.update cu: ## Run composer update
-	$(dc) run --rm app composer update
+	$(dc) run --rm -e XDEBUG_MODE=off app composer update
 
 composer.remove cr: ## Remove vendor directory
 	$(dc) run --rm app rm -rf vendor
 
 cpr: ## Check-platform-reqs
-	$(dc) run --rm --entrypoint composer app check-platform-reqs
+	$(dc) run --rm -e XDEBUG_MODE=off --entrypoint composer app check-platform-reqs
 
 lint: ## Lint
-	$(dc) run --rm --entrypoint composer app lint
+	$(dc) run --rm -e XDEBUG_MODE=off --entrypoint composer app lint
 
 test: ## Test
-	$(dc) run --rm --entrypoint composer app test
+	$(dc) run --rm -e XDEBUG_MODE=off --entrypoint composer app test
 
 autoload: ## Autoload
-	$(dc) run --rm --entrypoint composer app autoload
+	$(dc) run --rm -e XDEBUG_MODE=off --entrypoint composer app autoload
 
 check: ## Check
-	$(dc) run --rm --entrypoint composer app check
+	$(dc) run --rm -e XDEBUG_MODE=off --entrypoint composer app check
 
 ##@ Test
 smoke: ## Verify HTTP application readiness

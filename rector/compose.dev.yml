@@ -3,4 +3,7 @@ services:
     build:
       target: dev
     volumes:
+      - php_vendor:/app/vendor
       - ./src:/app
+volumes:
+  php_vendor:

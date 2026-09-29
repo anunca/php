@@ -6,5 +6,8 @@ services:
     build:
       target: dev
     volumes:
+      - php_vendor:/var/www/html/vendor
       - ./src:/var/www/html
       - ./xdebug:/tmp/xdebug
+volumes:
+  php_vendor:

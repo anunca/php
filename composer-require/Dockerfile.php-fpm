@@ -17,6 +17,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 FROM base-builder AS dev
 
+#php ini
+RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
+
 COPY src/composer.json src/composer.lock ./
 RUN --mount=type=cache,target=/tmp/composer-cache \
     --mount=type=secret,id=github_token \
@@ -27,9 +30,6 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
         --no-progress \
         --prefer-dist
 COPY src .
-
-#php ini
-RUN cp $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
 FROM base-builder AS prod-builder
 
