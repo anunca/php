@@ -16,7 +16,7 @@ export ENV=prod
 ```
 enable xdebug
 ```sh
-cat <<EOF>> .env
+cat <<EOF >> .env
 XDEBUG_MODE=develop,debug
 EOF
 ```

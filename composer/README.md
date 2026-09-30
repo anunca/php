@@ -19,7 +19,7 @@ export GITHUB_TOKEN=YOUR_GITHUB_TOKEN
 ```
 config
 ```sh
-cat <<EOF>> .env
+cat <<EOF >> .env
 GITHUB_TOKEN=$GITHUB_TOKEN
 EOF
 ```
