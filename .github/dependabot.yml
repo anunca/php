@@ -1,7 +1,24 @@
 version: 2
 updates:
   - package-ecosystem: composer
-    directory: /
+    directories:
+      - /amp/src
+      - /autoload-composer/src
+      - /builder/src
+      - /cache/src
+      - /composer-require/src
+      - /composer/src
+      - /di/src
+      - /doctrine/src
+      - /fibers/src
+      - /frankenphp/src
+      - /guzzle/src
+      - /opcache/src
+      - /raw/src
+      - /rector/src
+      - /router/src
+      - /twig/src
+      - /xdebug/src
     schedule:
       interval: weekly
   - package-ecosystem: github-actions
@@ -9,6 +26,30 @@ updates:
     schedule:
       interval: monthly
   - package-ecosystem: docker
-    directory: /
+    directories:
+      - /amp
+      - /auto-prepend-file
+      - /autoload
+      - /autoload-composer
+      - /autoload-namespace
+      - /beta
+      - /builder
+      - /cache
+      - /compil
+      - /composer
+      - /composer-require
+      - /di
+      - /doctrine
+      - /efk
+      - /fibers
+      - /frankenphp
+      - /guzzle
+      - /opcache
+      - /raw
+      - /rector
+      - /router
+      - /session
+      - /twig
+      - /xdebug
     schedule:
       interval: monthly
